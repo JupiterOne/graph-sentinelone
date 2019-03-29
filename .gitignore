@@ -12,5 +12,3 @@ src/executionHandler.ts
 src/executionHandler.test.ts
 src/invocationValidator.ts
 src/invocationValidator.test.ts
-src/initializeContext.ts
-src/initializeContext.test.ts
