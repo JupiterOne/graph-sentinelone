@@ -83,28 +83,48 @@ export interface ProviderConfig {
 
 export class ProviderClient {
   private agentUrl: string;
+  private groupUrl: string;
 
   constructor(providerConfig: ProviderConfig) {
     this.agentUrl = `${providerConfig.scheme}://${
       providerConfig.host
     }/web/api/v2.0/agents?apiToken=${providerConfig.token}`;
+
+    this.groupUrl = `${providerConfig.scheme}://${
+      providerConfig.host
+    }/web/api/v2.0/groups?apiToken=${providerConfig.token}`;
+  }
+
+  public async fetchGroups(): Promise<Group[]> {
+    try {
+      const response: Response = await fetch(this.groupUrl);
+      if (response.status === 401) {
+        throw new IntegrationInstanceAuthenticationError(
+          Error(response.statusText),
+        );
+      }
+      const groupInfo = JSON.parse(JSON.stringify(await response.json()));
+      const groups = [];
+
+      for (const group of groupInfo.data) {
+        groups.push(group);
+      }
+      return groups;
+    } catch (error) {
+      throw error;
+    }
   }
 
   public async fetchAgents(): Promise<Agent[]> {
     try {
       const response: Response = await fetch(this.agentUrl);
       if (response.status === 401) {
-        // tslint:disable-next-line:no-console
-        console.log(response.statusText);
         throw new IntegrationInstanceAuthenticationError(
           Error(response.statusText),
         );
       }
       const agentInfo = JSON.parse(JSON.stringify(await response.json()));
       const agents = [];
-
-      // tslint:disable-next-line:no-console
-      console.log(JSON.stringify(agentInfo, undefined, 2));
 
       for (const agent of agentInfo.data) {
         agents.push(this.mapToAgent(agent));

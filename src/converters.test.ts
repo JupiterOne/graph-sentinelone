@@ -7,8 +7,8 @@ import {
   AGENT_ENTITY_TYPE,
   AgentEntity,
   createAgentEntities,
+  createGroupAgentRelationships,
   createGroupEntities,
-  createSentinelOneGroupAgentRelationships,
   GROUP_AGENT_RELATIONSHIP_CLASS,
   GROUP_AGENT_RELATIONSHIP_TYPE,
   GROUP_ENTITY_TYPE,
@@ -69,7 +69,7 @@ test("SentinelOne Group has Agent relationships.", async () => {
   const aEntity: AgentEntity[] = createAgentEntities(
     await providerClient.fetchAgents(),
   );
-  const groupAgentRel: RelationshipFromIntegration[] = createSentinelOneGroupAgentRelationships(
+  const groupAgentRel: RelationshipFromIntegration[] = createGroupAgentRelationships(
     gEntity[0],
     aEntity,
   );

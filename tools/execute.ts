@@ -13,19 +13,21 @@ async function run(): Promise<void> {
   if (
     !process.env.SENTINELONE_API_TOKEN ||
     !process.env.SENTINELONE_API_HOST ||
-    !process.env.SENTINELONE_API_PORT ||
     !process.env.SENTINELONE_API_SCHEME
   ) {
     throw new Error(
-      "Local execution requires the WAZUH CONFIG variables be set",
+      "Local execution requires the SENTINELONE CONFIG variables be set",
     );
   }
 
   const integrationConfig: ProviderConfig = {
-    userId: process.env.SENTINELONE_API_TOKEN,
+    token: process.env.SENTINELONE_API_TOKEN,
     host: process.env.SENTINELONE_API_HOST,
-    port: process.env.SENTINELONE_API_PORT,
     scheme: process.env.SENTINELONE_API_SCHEME,
+  };
+
+  const invocationArgs = {
+    // providerPrivateKey: process.env.PROVIDER_LOCAL_EXECUTION_PRIVATE_KEY
   };
 
   logger.info(
@@ -33,7 +35,7 @@ async function run(): Promise<void> {
       integrationConfig,
       logger,
       executionHandler,
-      // invocationArgs,
+      invocationArgs,
       createLocalInvocationEvent(),
     ),
     "Execution completed successfully!",

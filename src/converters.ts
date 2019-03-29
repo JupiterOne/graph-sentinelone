@@ -102,7 +102,7 @@ export function createAgentEntities(data: Agent[]): AgentEntity[] {
   }));
 }
 
-export function createSentinelOneGroupAgentRelationships(
+export function createGroupAgentRelationships(
   group: GroupEntity,
   agents: AgentEntity[],
 ) {

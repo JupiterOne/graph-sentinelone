@@ -8,7 +8,3 @@ yarn-error.log
 SentinelOne-API.env
 .vscode
 src/types.ts
-src/executionHandler.ts
-src/executionHandler.test.ts
-src/invocationValidator.ts
-src/invocationValidator.test.ts
