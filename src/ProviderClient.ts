@@ -31,16 +31,13 @@ export interface Agent {
   consoleMigrationStatus?: string;
   updatedAt?: string;
   osType?: string;
-  // userActionsNeeded: string[];
   id: string;
   createdAt?: string;
-  // networkInterfaces: NetworkInterface[];
   externalIp?: string;
   computerName?: string;
   modelName?: string;
   uuid?: string;
   encryptedApplications?: boolean;
-  // activeDirectory: ActiveDirectory;
   adComputerDistinguishedName?: string;
   osUsername?: string;
   groupName?: string;
@@ -60,7 +57,7 @@ export interface Agent {
   isPendingUninstall?: boolean;
   scanFinishedAt?: string;
   lastActiveDate?: string;
-  groupId?: string;
+  groupId: string;
   isActive?: boolean;
   agentVersion?: string;
   licenseKey?: string;
@@ -81,33 +78,73 @@ export interface ProviderConfig {
   host: string;
 }
 
+interface Pagination {
+  totalItems: number;
+  nextCursor: string;
+  cursorSet: boolean;
+}
+
 export class ProviderClient {
+  protected groupPagination: Pagination;
+  protected agentPagination: Pagination;
   private agentUrl: string;
   private groupUrl: string;
+  private header: {};
 
   constructor(providerConfig: ProviderConfig) {
+    this.groupPagination = { totalItems: 0, nextCursor: "", cursorSet: false };
+    this.agentPagination = { totalItems: 0, nextCursor: "", cursorSet: false };
+
+    this.header = {
+      headers: { Authorization: `ApiToken ${providerConfig.token}` },
+    };
     this.agentUrl = `${providerConfig.scheme}://${
       providerConfig.host
-    }/web/api/v2.0/agents?apiToken=${providerConfig.token}`;
+    }/web/api/v2.0/agents`;
 
     this.groupUrl = `${providerConfig.scheme}://${
       providerConfig.host
-    }/web/api/v2.0/groups?apiToken=${providerConfig.token}`;
+    }/web/api/v2.0/groups`;
+  }
+
+  public additionalGroupPage(): boolean {
+    return this.groupPagination.cursorSet;
+  }
+
+  public additionalAgentPage(): boolean {
+    return this.agentPagination.cursorSet;
   }
 
   public async fetchGroups(): Promise<Group[]> {
     try {
-      const response: Response = await fetch(this.groupUrl);
-      if (response.status === 401) {
-        throw new IntegrationInstanceAuthenticationError(
-          Error(response.statusText),
-        );
-      }
-      const groupInfo = JSON.parse(JSON.stringify(await response.json()));
       const groups = [];
+      if (this.groupPagination.nextCursor !== null) {
+        let response: Response;
 
-      for (const group of groupInfo.data) {
-        groups.push(group);
+        if (this.groupPagination.cursorSet) {
+          response = await fetch(
+            `${this.groupUrl}?cursor=${this.groupPagination.nextCursor}`,
+            this.header,
+          );
+        } else {
+          response = await fetch(this.groupUrl, this.header);
+        }
+
+        if (response.status === 401) {
+          throw new IntegrationInstanceAuthenticationError(
+            Error(response.statusText),
+          );
+        }
+        const groupInfo = JSON.parse(JSON.stringify(await response.json()));
+
+        this.groupPagination = this.determineAdditionalPage(
+          groupInfo.pagination.nextCursor,
+          groupInfo.pagination.totalItems,
+        );
+
+        for (const group of groupInfo.data) {
+          groups.push(this.mapToGroup(group));
+        }
       }
       return groups;
     } catch (error) {
@@ -117,22 +154,74 @@ export class ProviderClient {
 
   public async fetchAgents(): Promise<Agent[]> {
     try {
-      const response: Response = await fetch(this.agentUrl);
-      if (response.status === 401) {
-        throw new IntegrationInstanceAuthenticationError(
-          Error(response.statusText),
-        );
-      }
-      const agentInfo = JSON.parse(JSON.stringify(await response.json()));
       const agents = [];
+      if (this.agentPagination.nextCursor !== null) {
+        let response: Response;
 
-      for (const agent of agentInfo.data) {
-        agents.push(this.mapToAgent(agent));
+        if (this.agentPagination.cursorSet) {
+          response = await fetch(
+            `${this.agentUrl}?cursor=${this.agentPagination.nextCursor}`,
+            this.header,
+          );
+        } else {
+          response = await fetch(this.agentUrl, this.header);
+        }
+
+        if (response.status === 401) {
+          throw new IntegrationInstanceAuthenticationError(
+            Error(response.statusText),
+          );
+        }
+        const agentInfo = JSON.parse(JSON.stringify(await response.json()));
+
+        this.agentPagination = this.determineAdditionalPage(
+          agentInfo.pagination.nextCursor,
+          agentInfo.pagination.totalItems,
+        );
+
+        for (const agent of agentInfo.data) {
+          agents.push(this.mapToAgent(agent));
+        }
       }
       return agents;
     } catch (error) {
       throw error;
     }
+  }
+
+  protected determineAdditionalPage(
+    nextCursor: string,
+    totalItems: number,
+  ): Pagination {
+    let cursorSet: boolean = false;
+    if (nextCursor === null) {
+      cursorSet = false;
+    } else {
+      cursorSet = true;
+    }
+
+    return { totalItems, nextCursor, cursorSet };
+  }
+
+  protected mapToGroup(g: string): Group {
+    const group = JSON.parse(JSON.stringify(g));
+
+    return {
+      inherits: group.inherits,
+      name: group.name,
+      creator: group.creator,
+      filterName: group.filterName,
+      totalAgents: group.totalAgents,
+      filterId: group.filterId,
+      rank: group.rank,
+      siteId: group.siteId,
+      isDefault: group.isDefault,
+      creatorId: group.creatorId,
+      updatedAt: group.updatedAt,
+      type: group.type,
+      id: group.id,
+      createdAt: group.createdAt,
+    };
   }
 
   protected mapToAgent(a: string): Agent {
@@ -151,16 +240,13 @@ export class ProviderClient {
       consoleMigrationStatus: agent.consoleMigrationStatus,
       updatedAt: agent.updatedAt,
       osType: agent.osType,
-      // userActionsNeeded: string[];
       id: agent.id,
       createdAt: agent.createdAt,
-      // networkInterfaces: NetworkInterface[];
       externalIp: agent.externalIp,
       computerName: agent.computerName,
       modelName: agent.modelName,
       uuid: agent.uuid,
       encryptedApplications: agent.encryptedApplications,
-      // activeDirectory: ActiveDirectory;
       adComputerDistinguishedName:
         agent.activeDirectory.ComputerDistinguishedName,
       osUsername: agent.osUsername,

@@ -27,6 +27,7 @@ async function run(): Promise<void> {
   };
 
   const invocationArgs = {
+    providerPrivateKey: "",
     // providerPrivateKey: process.env.PROVIDER_LOCAL_EXECUTION_PRIVATE_KEY
   };
 

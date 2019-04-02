@@ -2,7 +2,6 @@ node_modules/
 build/
 coverage/
 dist/
-jupiterone-jupiter-managed-integration-sdk-*
 yarn-error.log
 .DS_Store
 SentinelOne-API.env

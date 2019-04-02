@@ -805,9 +805,9 @@
     "@types/yargs" "^12.0.9"
 
 "@jupiterone/jupiter-managed-integration-sdk@^18.0.4":
-  version "20.1.2"
-  resolved "https://registry.yarnpkg.com/@jupiterone/jupiter-managed-integration-sdk/-/jupiter-managed-integration-sdk-20.1.2.tgz#e9f45fc5ce5ffeec7e246e5a0c599d69d38de687"
-  integrity sha512-Cxm6SG5sWRenEIGIgkRm1RBgx/j6q7DXm84z2X+xwiYw1iZURQrGB46VChDlcmn8gWX+WBBtOpHeF9kfcQlvMQ==
+  version "21.0.0"
+  resolved "https://registry.yarnpkg.com/@jupiterone/jupiter-managed-integration-sdk/-/jupiter-managed-integration-sdk-21.0.0.tgz#531d96fb460c65fe3cb8a1d0a8a40c39ee47c1b1"
+  integrity sha512-9l/R8OGlj6LjGLboEjeVvY1HsuXDoZpH9jMweiCbqZgWudaN8Uo0A9OblTC0U8zclxOjjkCVM/MDfTp/t8xEuQ==
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"

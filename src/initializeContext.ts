@@ -7,7 +7,7 @@ import {
 } from "@jupiterone/jupiter-managed-integration-sdk";
 import { ProviderClient, ProviderConfig } from "./ProviderClient";
 
-export interface WazuhExecutionContext
+export interface SentinelOneExecutionContext
   extends IntegrationExecutionContext<IntegrationInvocationEvent> {
   graph: GraphClient;
   persister: PersisterClient;
@@ -16,7 +16,7 @@ export interface WazuhExecutionContext
 
 export default function initializeContext(
   context: IntegrationExecutionContext<IntegrationInvocationEvent>,
-): WazuhExecutionContext {
+): SentinelOneExecutionContext {
   if (!context.instance.config) {
     throw new Error(
       "Provider config must be provided by the exectution environment",

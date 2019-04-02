@@ -8,14 +8,12 @@ import {
   AGENT_ENTITY_TYPE,
   AgentEntity,
   createAgentEntities,
-  // createGroupAgentRelationships,
-  // createGroupEntities,
-  // GROUP_AGENT_RELATIONSHIP_TYPE,
-  // GROUP_ENTITY_TYPE,
-  // GroupEntity,
+  createGroupAgentRelationships,
+  createGroupEntities,
+  GROUP_AGENT_RELATIONSHIP_TYPE,
+  GROUP_ENTITY_TYPE,
+  GroupEntity,
 } from "./converters";
-
-// import { Group } from "./ProviderClient";
 
 import initializeContext from "./initializeContext";
 
@@ -26,32 +24,36 @@ export default async function executionHandler(
     const { graph, persister, provider } = initializeContext(context);
 
     const [
-      //      oldGroupEntities,
+      oldGroupEntities,
       oldAgentEntities,
-      //      oldGroupAgentRelationships,
+      oldGroupAgentRelationships,
     ] = await Promise.all([
-      //      graph.findEntitiesByType<GroupEntity>(GROUP_ENTITY_TYPE),
+      graph.findEntitiesByType<GroupEntity>(GROUP_ENTITY_TYPE),
       graph.findEntitiesByType<AgentEntity>(AGENT_ENTITY_TYPE),
-      //      graph.findRelationshipsByType(GROUP_AGENT_RELATIONSHIP_TYPE),
+      graph.findRelationshipsByType(GROUP_AGENT_RELATIONSHIP_TYPE),
     ]);
 
-    //    const groups: Group[] = await provider.fetchGroups();
-    //    const groupEntities: GroupEntity[] = createGroupEntities(groups);
-    const agentEntities: AgentEntity[] = createAgentEntities(
-      await provider.fetchAgents(),
-    );
+    const groupEntities: GroupEntity[] = [];
+    do {
+      groupEntities.concat(createGroupEntities(await provider.fetchGroups()));
+    } while (provider.additionalGroupPage());
+
+    const agentEntities: AgentEntity[] = [];
+    do {
+      agentEntities.concat(createAgentEntities(await provider.fetchAgents()));
+    } while (provider.additionalAgentPage());
 
     return {
       operations: await persister.publishPersisterOperations([
         [
-          //          ...persister.processEntities(oldGroupEntities, groupEntities),
+          ...persister.processEntities(oldGroupEntities, groupEntities),
           ...persister.processEntities(oldAgentEntities, agentEntities),
         ],
         [
-          //           ...persister.processRelationships(
-          //             oldGroupAgentRelationships,
-          //             createGroupAgentRelationships(groupEntities[0], agentEntities),
-          //           ),
+          ...persister.processRelationships(
+            oldGroupAgentRelationships,
+            createGroupAgentRelationships(groupEntities, agentEntities),
+          ),
         ],
       ]),
     };

@@ -45,9 +45,7 @@ export function createAgentEntities(data: Agent[]): AgentEntity[] {
     _key: `${AGENT_ENTITY_TYPE}-id-${d.id}`,
     _type: AGENT_ENTITY_TYPE,
     _class: AGENT_ENTITY_CLASS,
-    ownerId: d.groupId,
-    displayName: `${d.computerName}`,
-
+    displayName: d.computerName,
     domain: d.domain,
     appsVulnerabilityStatus: d.appsVulnerabilityStatus,
     siteName: d.siteName,
@@ -103,12 +101,20 @@ export function createAgentEntities(data: Agent[]): AgentEntity[] {
 }
 
 export function createGroupAgentRelationships(
-  group: GroupEntity,
+  groups: GroupEntity[],
   agents: AgentEntity[],
-) {
+): RelationshipFromIntegration[] {
   const relationships = [];
+  const groupsById: { [id: string]: GroupEntity } = {};
+  for (const group of groups) {
+    groupsById[group.id] = group;
+  }
+
   for (const agent of agents) {
-    relationships.push(createGroupAgentRelationship(group, agent));
+    const group = groupsById[agent.groupId];
+    if (group !== undefined) {
+      relationships.push(createGroupAgentRelationship(group, agent));
+    }
   }
 
   return relationships;

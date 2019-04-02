@@ -1,6 +1,6 @@
 import { RelationshipFromIntegration } from "@jupiterone/jupiter-managed-integration-sdk";
-import { ProviderClientMock, providerConfigEnv } from "../testutil/test.types";
-import { Agent } from "./ProviderClient";
+import { getProviderClient, providerConfigEnv } from "../testutil/test.types";
+import { Agent, ProviderClient } from "./ProviderClient";
 
 import {
   AGENT_ENTITY_CLASS,
@@ -16,33 +16,33 @@ import {
 } from "./converters";
 import { Group } from "./ProviderClient";
 
-test("SentinelOne Group being converted to Group Entity where group = group entity.", () => {
-  const providerClient: ProviderClientMock = new ProviderClientMock(
-    providerConfigEnv(),
-  );
-  const g: Group = providerClient.fetchGroup();
+test("SentinelOne Group being converted to Group Entity where group = group entity.", async () => {
+  const providerClient: ProviderClient = getProviderClient(providerConfigEnv());
+
+  const g: Group[] = await providerClient.fetchGroups();
   expect(g).toBeDefined();
 
-  const groupEntity: GroupEntity = createGroupEntities([g])[0];
+  const groupEntity: GroupEntity[] = createGroupEntities(g);
 
-  expect(groupEntity.id).toEqual(g.id);
-  expect(groupEntity.inherits).toEqual(g.inherits);
-  expect(groupEntity.name).toEqual(g.name);
-  expect(groupEntity.creator).toEqual(g.creator);
-  expect(groupEntity.filterName).toEqual(g.filterName);
-  expect(groupEntity.totalAgents).toEqual(g.totalAgents);
-  expect(groupEntity.filterId).toEqual(g.filterId);
-  expect(groupEntity.rank).toEqual(g.rank);
-  expect(groupEntity.siteId).toEqual(g.siteId);
-  expect(groupEntity.isDefault).toEqual(g.isDefault);
-  expect(groupEntity._key).toEqual(`${GROUP_ENTITY_TYPE}-id-${g.id}`);
-  expect(groupEntity.displayName).toEqual(`${g.name} ${g.type}`);
+  for (let i: number = 0; i < g.length; i++) {
+    expect(groupEntity[i].id).toEqual(g[i].id);
+    expect(groupEntity[i].inherits).toEqual(g[i].inherits);
+    expect(groupEntity[i].name).toEqual(g[i].name);
+    expect(groupEntity[i].creator).toEqual(g[i].creator);
+    expect(groupEntity[i].filterName).toEqual(g[i].filterName);
+    expect(groupEntity[i].totalAgents).toEqual(g[i].totalAgents);
+    expect(groupEntity[i].filterId).toEqual(g[i].filterId);
+    expect(groupEntity[i].rank).toEqual(g[i].rank);
+    expect(groupEntity[i].siteId).toEqual(g[i].siteId);
+    expect(groupEntity[i].isDefault).toEqual(g[i].isDefault);
+    expect(groupEntity[i]._key).toEqual(`${GROUP_ENTITY_TYPE}-id-${g[i].id}`);
+    expect(groupEntity[i].displayName).toEqual(`${g[i].name} ${g[i].type}`);
+  }
 });
 
 test("SentinelOne Agents being converted to Agent Entities where agent = agent entyity.", async () => {
-  const providerClient: ProviderClientMock = new ProviderClientMock(
-    providerConfigEnv(),
-  );
+  const providerClient: ProviderClient = getProviderClient(providerConfigEnv());
+
   const a: Agent[] = await providerClient.fetchAgents();
   expect(a).toBeDefined();
 
@@ -60,27 +60,21 @@ test("SentinelOne Agents being converted to Agent Entities where agent = agent e
 });
 
 test("SentinelOne Group has Agent relationships.", async () => {
-  const providerClient: ProviderClientMock = new ProviderClientMock(
-    providerConfigEnv(),
+  const providerClient: ProviderClient = getProviderClient(providerConfigEnv());
+
+  const gEntity: GroupEntity[] = createGroupEntities(
+    await providerClient.fetchGroups(),
   );
-  const gEntity: GroupEntity[] = createGroupEntities([
-    providerClient.fetchGroup(),
-  ]);
   const aEntity: AgentEntity[] = createAgentEntities(
     await providerClient.fetchAgents(),
   );
   const groupAgentRel: RelationshipFromIntegration[] = createGroupAgentRelationships(
-    gEntity[0],
+    gEntity,
     aEntity,
   );
 
-  for (let i: number = 0; i < groupAgentRel.length; i++) {
-    expect(groupAgentRel[i]._key).toEqual(
-      `${gEntity[0]._key}_has_${aEntity[i]._key}`,
-    );
-    expect(groupAgentRel[i]._type).toEqual(GROUP_AGENT_RELATIONSHIP_TYPE);
-    expect(groupAgentRel[i]._class).toEqual(GROUP_AGENT_RELATIONSHIP_CLASS);
-    expect(groupAgentRel[i]._fromEntityKey).toEqual(gEntity[0]._key);
-    expect(groupAgentRel[i]._toEntityKey).toEqual(aEntity[i]._key);
+  for (const rel of groupAgentRel) {
+    expect(rel._type).toEqual(GROUP_AGENT_RELATIONSHIP_TYPE);
+    expect(rel._class).toEqual(GROUP_AGENT_RELATIONSHIP_CLASS);
   }
 });

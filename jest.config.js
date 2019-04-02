@@ -8,7 +8,8 @@ module.exports = {
   collectCoverageFrom: [
     "src/**/*.ts",
     "!src/index.ts",
-    "!src/ProviderClient.ts",
+    "!src/executionHandler.ts",
+    "!src/invocationValidator.ts",
   ],
   moduleFileExtensions: [...defaults.moduleFileExtensions, "ts"],
   testEnvironment: "node",
