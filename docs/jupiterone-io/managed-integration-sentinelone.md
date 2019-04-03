@@ -12,7 +12,7 @@ their target SentinelOne account and providing that credential to JupiterOne.
 The integration is triggered by an event containing the information for a
 specific integration instance.
 
-SentinelOne provides [Every API call requires authentication. The recommended
+SentinelOne provides Every API call requires authentication. The recommended
 authentication is API Token. If SSO or Two-Factor Authentication is mandatory
 for your username, you must use a Token.
 
@@ -27,9 +27,7 @@ Generating an API Token from your account WebUI:
     authorization. Regenerate revokes the token and generates a new token. If
     you click Generate or Regenerate, a message shows the token string and the
     date that the token expires.
-5.  Click DOWNLOAD. ][1]
-
-within your SentinelOne account.
+5.  Click DOWNLOAD.
 
 ## Entities
 
