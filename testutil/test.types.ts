@@ -342,14 +342,13 @@ export function getProviderClient(
 ): ProviderClient {
   return process.env.SENTINELONE_API_INTEGRATION !== undefined &&
     process.env.SENTINELONE_API_INTEGRATION === "1"
-    ? new ProviderClient(providerConfigEnv())
-    : new ProviderClientMock(providerConfigEnv());
+    ? new ProviderClient(providerConfig)
+    : new ProviderClientMock(providerConfig);
 }
 
 export function providerConfigEnv(): ProviderConfig {
   return {
-    token: process.env.SENTINELONE_API_TOKEN || "token",
-    host: process.env.SENTINELONE_API_HOST || "localhost",
-    scheme: process.env.SENTINELONE_API_SCHEME || "https",
+    apiToken: process.env.SENTINELONE_API_TOKEN || "token",
+    serverUrl: process.env.SENTINELONE_API_SERVERURL || "https://localhost",
   };
 }

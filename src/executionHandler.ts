@@ -33,15 +33,12 @@ export default async function executionHandler(
       graph.findRelationshipsByType(GROUP_AGENT_RELATIONSHIP_TYPE),
     ]);
 
-    const groupEntities: GroupEntity[] = [];
-    do {
-      groupEntities.concat(createGroupEntities(await provider.fetchGroups()));
-    } while (provider.additionalGroupPage());
-
-    const agentEntities: AgentEntity[] = [];
-    do {
-      agentEntities.concat(createAgentEntities(await provider.fetchAgents()));
-    } while (provider.additionalAgentPage());
+    const groupEntities: GroupEntity[] = createGroupEntities(
+      await provider.fetchGroups(),
+    );
+    const agentEntities: AgentEntity[] = createAgentEntities(
+      await provider.fetchAgents(),
+    );
 
     return {
       operations: await persister.publishPersisterOperations([

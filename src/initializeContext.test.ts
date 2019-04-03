@@ -7,9 +7,8 @@ import { ProviderConfig } from "./ProviderClient";
 
 function resetConfig(): ProviderConfig {
   return {
-    token: process.env.SENTINELONE_API_TOKEN || "xxx",
-    host: process.env.SENTINELONE_API_HOST || "localhost",
-    scheme: process.env.SENTINELONE_API_SCHEME || "https",
+    apiToken: process.env.SENTINELONE_API_TOKEN || "xxx",
+    serverUrl: process.env.SENTINELONE_API_SERVERURL || "https://localhost",
   };
 }
 
@@ -25,28 +24,17 @@ test("creating SentinelOne client with an undefined config", () => {
 test("creating SentinelOne client with a blank token", () => {
   const executionContext = createTestIntegrationExecutionContext();
   executionContext.instance.config = resetConfig();
-  executionContext.instance.config.token = "";
+  executionContext.instance.config.apiToken = "";
   function initialize() {
     initializeContext(executionContext);
   }
   expect(initialize).toThrowError(IntegrationInstanceConfigError);
 });
 
-test("creating SentinelOne client with a blank host", () => {
+test("creating SentinelOne client with a blank serverUrl", () => {
   const executionContext = createTestIntegrationExecutionContext();
   executionContext.instance.config = resetConfig();
-  executionContext.instance.config.host = "";
-
-  function initialize() {
-    initializeContext(executionContext);
-  }
-  expect(initialize).toThrowError(IntegrationInstanceConfigError);
-});
-
-test("creating SentinelOne client with a blank scheme", () => {
-  const executionContext = createTestIntegrationExecutionContext();
-  executionContext.instance.config = resetConfig();
-  executionContext.instance.config.scheme = "";
+  executionContext.instance.config.serverUrl = "";
 
   function initialize() {
     initializeContext(executionContext);

@@ -12,8 +12,7 @@ async function run(): Promise<void> {
 
   if (
     !process.env.SENTINELONE_API_TOKEN ||
-    !process.env.SENTINELONE_API_HOST ||
-    !process.env.SENTINELONE_API_SCHEME
+    !process.env.SENTINELONE_API_SERVERURL
   ) {
     throw new Error(
       "Local execution requires the SENTINELONE CONFIG variables be set",
@@ -21,9 +20,8 @@ async function run(): Promise<void> {
   }
 
   const integrationConfig: ProviderConfig = {
-    token: process.env.SENTINELONE_API_TOKEN,
-    host: process.env.SENTINELONE_API_HOST,
-    scheme: process.env.SENTINELONE_API_SCHEME,
+    apiToken: process.env.SENTINELONE_API_TOKEN,
+    serverUrl: process.env.SENTINELONE_API_SERVERURL,
   };
 
   const invocationArgs = {

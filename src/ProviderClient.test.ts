@@ -1,4 +1,8 @@
-import { getProviderClient, providerConfigEnv } from "../testutil/test.types";
+import {
+  getProviderClient,
+  ProviderClientMock,
+  providerConfigEnv,
+} from "../testutil/test.types";
 import { Agent, Group, ProviderClient, ProviderConfig } from "./ProviderClient";
 
 const ValidGroupType = ["static", "dynamic"];
@@ -13,42 +17,39 @@ const ValidNetworkStatus = [
 test("Page through all sentinelOne groups", async () => {
   const providerClient: ProviderClient = getProviderClient(providerConfigEnv());
   let groups: Group[];
-  let i = 0;
-  do {
-    groups = await providerClient.fetchGroups();
-    expect(groups).toBeDefined();
-    groups.forEach(group => {
-      expect(expect.arrayContaining([group.type])).toEqual(ValidGroupType);
-    });
-  } while (providerClient.additionalGroupPage() && i++ < 1);
+
+  groups = await providerClient.fetchGroups();
+  expect(groups).toBeDefined();
+  groups.forEach(group => {
+    expect(expect.arrayContaining([group.type])).toEqual(ValidGroupType);
+  });
 });
 
 test("Page through all registered sentinelOne agents", async () => {
   const providerClient: ProviderClient = getProviderClient(providerConfigEnv());
   let agents: Agent[];
-  let i = 0;
-  do {
-    agents = await providerClient.fetchAgents();
-    expect(agents).toBeDefined();
-    agents.forEach(agent => {
-      expect(expect.arrayContaining([agent.scanStatus])).toEqual(
-        ValidScanStatus,
-      );
-      expect(expect.arrayContaining([agent.networkStatus])).toEqual(
-        ValidNetworkStatus,
-      );
-    });
-  } while (providerClient.additionalAgentPage() && i++ < 1);
+
+  agents = await providerClient.fetchAgents();
+  expect(agents).toBeDefined();
+  agents.forEach(agent => {
+    expect(expect.arrayContaining([agent.scanStatus])).toEqual(ValidScanStatus);
+    expect(expect.arrayContaining([agent.networkStatus])).toEqual(
+      ValidNetworkStatus,
+    );
+  });
 });
 
 test("Invalid agent token ", async () => {
   const providerConfig: ProviderConfig = providerConfigEnv();
-  providerConfig.token = "xxx";
+  providerConfig.apiToken = "xxx";
   const providerClient: ProviderClient = getProviderClient(providerConfig);
 
-  try {
-    await providerClient.fetchAgents();
-  } catch (error) {
-    expect.hasAssertions();
+  if (typeof ProviderClientMock) {
+    expect.assertions(0);
+  } else {
+    expect.assertions(1);
+    return providerClient
+      .fetchAgents()
+      .catch(e => expect(e.toString()).toMatch(/authentication/));
   }
 });

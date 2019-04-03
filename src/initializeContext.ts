@@ -23,20 +23,15 @@ export default function initializeContext(
     );
   }
 
-  if (
-    !context.instance.config.token ||
-    !context.instance.config.scheme ||
-    !context.instance.config.host
-  ) {
+  if (!context.instance.config.apiToken || !context.instance.config.serverUrl) {
     throw new IntegrationInstanceConfigError(
-      "Config sentinelOne token, scheme, and host must be provided by the user",
+      "Config sentinelOne apiToken, and serverUrl must be provided by the user",
     );
   }
 
   const providerConfig: ProviderConfig = {
-    token: context.instance.config.token,
-    scheme: context.instance.config.scheme,
-    host: context.instance.config.host,
+    apiToken: context.instance.config.apiToken,
+    serverUrl: context.instance.config.serverUrl,
   };
 
   return {

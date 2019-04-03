@@ -73,9 +73,8 @@ export interface Agent {
 }
 
 export interface ProviderConfig {
-  token: string;
-  scheme: string;
-  host: string;
+  apiToken: string;
+  serverUrl: string;
 }
 
 interface Pagination {
@@ -96,34 +95,22 @@ export class ProviderClient {
     this.agentPagination = { totalItems: 0, nextCursor: "", cursorSet: false };
 
     this.header = {
-      headers: { Authorization: `ApiToken ${providerConfig.token}` },
+      headers: { Authorization: `ApiToken ${providerConfig.apiToken}` },
     };
-    this.agentUrl = `${providerConfig.scheme}://${
-      providerConfig.host
-    }/web/api/v2.0/agents`;
+    this.agentUrl = `${providerConfig.serverUrl}/web/api/v2.0/agents`;
 
-    this.groupUrl = `${providerConfig.scheme}://${
-      providerConfig.host
-    }/web/api/v2.0/groups`;
-  }
-
-  public additionalGroupPage(): boolean {
-    return this.groupPagination.cursorSet;
-  }
-
-  public additionalAgentPage(): boolean {
-    return this.agentPagination.cursorSet;
+    this.groupUrl = `${providerConfig.serverUrl}/web/api/v2.0/groups`;
   }
 
   public async fetchGroups(): Promise<Group[]> {
     try {
       const groups = [];
-      if (this.groupPagination.nextCursor !== null) {
-        let response: Response;
+      let response: Response;
 
+      do {
         if (this.groupPagination.cursorSet) {
           response = await fetch(
-            `${this.groupUrl}?cursor=${this.groupPagination.nextCursor}`,
+            `${this.groupUrl}&cursor=${this.groupPagination.nextCursor}`,
             this.header,
           );
         } else {
@@ -145,7 +132,8 @@ export class ProviderClient {
         for (const group of groupInfo.data) {
           groups.push(this.mapToGroup(group));
         }
-      }
+      } while (this.groupPagination.cursorSet);
+
       return groups;
     } catch (error) {
       throw error;
@@ -155,12 +143,12 @@ export class ProviderClient {
   public async fetchAgents(): Promise<Agent[]> {
     try {
       const agents = [];
-      if (this.agentPagination.nextCursor !== null) {
-        let response: Response;
+      let response: Response;
 
+      do {
         if (this.agentPagination.cursorSet) {
           response = await fetch(
-            `${this.agentUrl}?cursor=${this.agentPagination.nextCursor}`,
+            `${this.agentUrl}&cursor=${this.agentPagination.nextCursor}`,
             this.header,
           );
         } else {
@@ -182,7 +170,8 @@ export class ProviderClient {
         for (const agent of agentInfo.data) {
           agents.push(this.mapToAgent(agent));
         }
-      }
+      } while (this.agentPagination.cursorSet);
+
       return agents;
     } catch (error) {
       throw error;
@@ -199,7 +188,6 @@ export class ProviderClient {
     } else {
       cursorSet = true;
     }
-
     return { totalItems, nextCursor, cursorSet };
   }
 
