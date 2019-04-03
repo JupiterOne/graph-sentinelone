@@ -36,7 +36,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-typescript": "^7.1.0",
-    "@jupiterone/jupiter-managed-integration-sdk": "^18.0.4",
+    "@jupiterone/jupiter-managed-integration-sdk": "^21.0.0",
     "@types/bunyan": "^1.8.5",
     "@types/fs-extra": "^5.0.5",
     "@types/jest": "^24.0.0",
