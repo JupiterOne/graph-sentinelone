@@ -1,5 +1,7 @@
 import {
   getProviderClient,
+  mockAgentInfoError,
+  mockGroupInfoError,
   ProviderClientMock,
   providerConfigEnv,
 } from "../testutil/test.types";
@@ -42,14 +44,97 @@ test("Page through all registered sentinelOne agents", async () => {
 test("Invalid agent token ", async () => {
   const providerConfig: ProviderConfig = providerConfigEnv();
   providerConfig.apiToken = "xxx";
-  const providerClient: ProviderClient = getProviderClient(providerConfig);
+  let providerClient: ProviderClient = getProviderClient(providerConfig);
 
   if (typeof ProviderClientMock) {
-    expect.assertions(0);
-  } else {
-    expect.assertions(1);
-    return providerClient
-      .fetchAgents()
-      .catch(e => expect(e.toString()).toMatch(/authentication/));
+    providerClient = new ProviderClientMock(
+      providerConfig,
+      mockGroupInfoError,
+      mockAgentInfoError,
+    );
   }
+
+  expect.assertions(1);
+  return providerClient
+    .fetchAgents()
+    .catch(e => expect(e.toString()).toMatch(/authentication/));
+});
+
+test("Invalid group token ", async () => {
+  const providerConfig: ProviderConfig = providerConfigEnv();
+  providerConfig.apiToken = "xxx";
+  let providerClient: ProviderClient = getProviderClient(providerConfig);
+
+  if (typeof ProviderClientMock) {
+    providerClient = new ProviderClientMock(
+      providerConfig,
+      mockGroupInfoError,
+      mockAgentInfoError,
+    );
+  }
+
+  expect.assertions(1);
+  return providerClient
+    .fetchGroups()
+    .catch(e => expect(e.toString()).toMatch(/authentication/));
+});
+
+test("Invalid group fetch ", async () => {
+  const providerConfig: ProviderConfig = {
+    apiToken: "xxx",
+    serverUrl: "https://localhost",
+  };
+  const providerClient: ProviderClientMock = new ProviderClientMock(
+    providerConfig,
+  );
+
+  expect.assertions(1);
+  return providerClient
+    .fetchGroupsInfo()
+    .catch(e => expect(e.toString()).toMatch(/FetchError/));
+});
+
+test("Invalid group fetch cursorSet", async () => {
+  const providerConfig: ProviderConfig = {
+    apiToken: "xxx",
+    serverUrl: "https://localhost",
+  };
+  const providerClient: ProviderClientMock = new ProviderClientMock(
+    providerConfig,
+  );
+
+  expect.assertions(1);
+  providerClient.setGroupPagination(0, "", true);
+  return providerClient
+    .fetchGroupsInfo()
+    .catch(e => expect(e.toString()).toMatch(/FetchError/));
+});
+
+test("Invalid agent fetch ", async () => {
+  const providerConfig: ProviderConfig = {
+    apiToken: "xxx",
+    serverUrl: "https://localhost",
+  };
+  const providerClient: ProviderClient = getProviderClient(providerConfig);
+
+  expect.assertions(1);
+  return providerClient
+    .fetchAgentsInfo()
+    .catch(e => expect(e.toString()).toMatch(/FetchError/));
+});
+
+test("Invalid agent fetch cursorSet", async () => {
+  const providerConfig: ProviderConfig = {
+    apiToken: "xxx",
+    serverUrl: "https://localhost",
+  };
+  const providerClient: ProviderClientMock = new ProviderClientMock(
+    providerConfig,
+  );
+
+  expect.assertions(1);
+  providerClient.setAgentPagination(0, "", true);
+  return providerClient
+    .fetchAgentsInfo()
+    .catch(e => expect(e.toString()).toMatch(/FetchError/));
 });

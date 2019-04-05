@@ -77,7 +77,7 @@ export interface ProviderConfig {
   serverUrl: string;
 }
 
-interface Pagination {
+export interface Pagination {
   totalItems: number;
   nextCursor: string;
   cursorSet: boolean;
@@ -90,7 +90,14 @@ export class ProviderClient {
   private groupUrl: string;
   private header: {};
 
-  constructor(providerConfig: ProviderConfig) {
+  private groupInfoCallback: any;
+  private agentInfoCallback: any;
+
+  constructor(
+    providerConfig: ProviderConfig,
+    groupInfoCallback?: () => Promise<{}>,
+    agentInfoCallback?: () => Promise<{}>,
+  ) {
     this.groupPagination = { totalItems: 0, nextCursor: "", cursorSet: false };
     this.agentPagination = { totalItems: 0, nextCursor: "", cursorSet: false };
 
@@ -100,29 +107,48 @@ export class ProviderClient {
     this.agentUrl = `${providerConfig.serverUrl}/web/api/v2.0/agents`;
 
     this.groupUrl = `${providerConfig.serverUrl}/web/api/v2.0/groups`;
+
+    this.groupInfoCallback =
+      groupInfoCallback === undefined
+        ? this.fetchGroupsInfo
+        : groupInfoCallback;
+    this.agentInfoCallback =
+      agentInfoCallback === undefined
+        ? this.fetchAgentsInfo
+        : agentInfoCallback;
+  }
+
+  public async fetchGroupsInfo(): Promise<{}> {
+    let response: Response;
+    try {
+      if (this.groupPagination.cursorSet) {
+        response = await fetch(
+          `${this.groupUrl}&cursor=${this.groupPagination.nextCursor}`,
+          this.header,
+        );
+      } else {
+        response = await fetch(this.groupUrl, this.header);
+      }
+
+      if (response.status === 401) {
+        throw new IntegrationInstanceAuthenticationError(
+          Error(response.statusText),
+        );
+      }
+    } catch (error) {
+      throw error;
+    }
+    return await response.json();
   }
 
   public async fetchGroups(): Promise<Group[]> {
     try {
       const groups = [];
-      let response: Response;
 
       do {
-        if (this.groupPagination.cursorSet) {
-          response = await fetch(
-            `${this.groupUrl}&cursor=${this.groupPagination.nextCursor}`,
-            this.header,
-          );
-        } else {
-          response = await fetch(this.groupUrl, this.header);
-        }
-
-        if (response.status === 401) {
-          throw new IntegrationInstanceAuthenticationError(
-            Error(response.statusText),
-          );
-        }
-        const groupInfo = JSON.parse(JSON.stringify(await response.json()));
+        const groupInfo = JSON.parse(
+          JSON.stringify(await this.groupInfoCallback()),
+        );
 
         this.groupPagination = this.determineAdditionalPage(
           groupInfo.pagination.nextCursor,
@@ -140,27 +166,38 @@ export class ProviderClient {
     }
   }
 
+  public async fetchAgentsInfo(): Promise<Agent[]> {
+    let response: Response;
+    try {
+      if (this.agentPagination.cursorSet) {
+        response = await fetch(
+          `${this.agentUrl}&cursor=${this.agentPagination.nextCursor}`,
+          this.header,
+        );
+      } else {
+        response = await fetch(this.agentUrl, this.header);
+      }
+
+      if (response.status === 401) {
+        throw new IntegrationInstanceAuthenticationError(
+          Error(response.statusText),
+        );
+      }
+    } catch (error) {
+      throw error;
+    }
+
+    return await response.json();
+  }
+
   public async fetchAgents(): Promise<Agent[]> {
     try {
       const agents = [];
-      let response: Response;
 
       do {
-        if (this.agentPagination.cursorSet) {
-          response = await fetch(
-            `${this.agentUrl}&cursor=${this.agentPagination.nextCursor}`,
-            this.header,
-          );
-        } else {
-          response = await fetch(this.agentUrl, this.header);
-        }
-
-        if (response.status === 401) {
-          throw new IntegrationInstanceAuthenticationError(
-            Error(response.statusText),
-          );
-        }
-        const agentInfo = JSON.parse(JSON.stringify(await response.json()));
+        const agentInfo = JSON.parse(
+          JSON.stringify(await this.agentInfoCallback()),
+        );
 
         this.agentPagination = this.determineAdditionalPage(
           agentInfo.pagination.nextCursor,
