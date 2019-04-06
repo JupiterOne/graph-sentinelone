@@ -35,8 +35,8 @@ The following entity resources are ingested when the integration runs:
 
 | Example Entity Resource | \_type : \_class of the Entity      |
 | ----------------------- | ----------------------------------- |
-| Group                   | `sentinelone_group` : `HostedGroup` |
-| Agent                   | `sentinelone_agent` : `HostedAgent` |
+| Group                   | `sentinelone_group` : `Group`       |
+| Agent                   | `sentinelone_agent` : `HostAgent`   |
 
 ## Relationships
 
