@@ -5,7 +5,7 @@ import {
 import { Agent, Group } from "./ProviderClient";
 
 export const GROUP_ENTITY_TYPE = "sentinelone_group";
-export const GROUP_ENTITY_CLASS = "HostGroup";
+export const GROUP_ENTITY_CLASS = "Group";
 
 export const AGENT_ENTITY_TYPE = "sentinelone_agent";
 export const AGENT_ENTITY_CLASS = "HostAgent";
