@@ -1,5 +1,7 @@
 # JupiterOne Managed Integration for SentinelOne
 
+[![Build Status](https://travis-ci.org/JupiterOne/jupiter-integration-sentinelone.svg?branch=master)](https://travis-ci.org/JupterOne/jupiter-integration-sentinelone)
+
 A JupiterOne integration ingests information such as configurations and other
 metadata about digital and physical assets belonging to an organization. The
 integration is responsible for connecting to data provider APIs and determining
@@ -54,21 +56,21 @@ Integrations mutate the graph to reflect configurations and metadata from the
 provider. Developing an integration involves:
 
 1.  Establishing a secure connection to a provider API
-2.  Fetching provider data and converting it to entities and relationships
-3.  Collecting the existing set of entities and relationships already in the
+1.  Fetching provider data and converting it to entities and relationships
+1.  Collecting the existing set of entities and relationships already in the
     graph
-4.  Performing a diff to determine which entites/relationships to
+1.  Performing a diff to determine which entites/relationships to
     create/update/delete
-5.  Delivering create/update/delete operations to the persister to update the
+1.  Delivering create/update/delete operations to the persister to update the
     graph
 
 Run the integration to see what happens. You may use use Node to execute
 directly on your machine (NVM is recommended).
 
 1.  Install Docker
-2.  `yarn install`
-3.  `yarn start:graph`
-4.  `yarn start`
+1.  `yarn install`
+1.  `yarn start:graph`
+1.  `yarn start`
 
 Activity is logged to the console indicating the operations produced and
 processed. View raw data in the graph database using
@@ -99,7 +101,7 @@ development provider account.
 
 1. Update `tools/execute.ts` to provide the properties required by the
    `executionHandler` function
-2. Create a `.env` file to provide the environment variables transferred into
+1. Create a `.env` file to provide the environment variables transferred into
    the properties
 
 For example, given this execution script:
@@ -134,12 +136,12 @@ here.
 Set the following environment variables in the JupitorOne configuration UI or in
 your local environment for testing
 
-- `SENTINELONE_API_TOKEN`
-- `SENTINELONE_API_SERVERURL` - `"https://localhost"`
-- `SENTINELONE_API_INTEGRATION` - `"0"`
+- `SENTINELONE_LOCAL_EXECUTION_API_TOKEN`
+- `SENTINELONE_LOCAL_EXECUTION_API_URL` - `"https://localhost"`
+- `SENTINELONE_TEST_MODE`
 
 To perform integration tests with your SentinelOne account, set the
-`SENTINELONE_API_INTEGRATION=1` befor running tests.
+`SENTINELONE_TEST_MODE=integration` before running tests.
 
 ### Running tests
 

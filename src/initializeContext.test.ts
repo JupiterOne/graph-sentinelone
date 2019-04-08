@@ -7,8 +7,9 @@ import { ProviderConfig } from "./ProviderClient";
 
 function resetConfig(): ProviderConfig {
   return {
-    apiToken: process.env.SENTINELONE_API_TOKEN || "xxx",
-    serverUrl: process.env.SENTINELONE_API_SERVERURL || "https://localhost",
+    apiToken: process.env.SENTINELONE_LOCAL_EXECUTION_API_TOKEN || "xxx",
+    serverUrl:
+      process.env.SENTINELONE_LOCAL_EXECUTION_API_URL || "https://localhost",
   };
 }
 

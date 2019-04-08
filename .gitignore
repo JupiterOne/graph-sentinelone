@@ -3,7 +3,4 @@ build/
 coverage/
 dist/
 yarn-error.log
-.DS_Store
-SentinelOne-API.env
-.vscode
-src/types.ts
+.env

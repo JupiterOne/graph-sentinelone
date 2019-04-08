@@ -11,8 +11,8 @@ async function run(): Promise<void> {
   const logger = createLogger({ name: "local", level: TRACE });
 
   if (
-    !process.env.SENTINELONE_API_TOKEN ||
-    !process.env.SENTINELONE_API_SERVERURL
+    !process.env.SENTINELONE_LOCAL_EXECUTION_API_TOKEN ||
+    !process.env.SENTINELONE_LOCAL_EXECUTION_API_URL
   ) {
     throw new Error(
       "Local execution requires the SENTINELONE CONFIG variables be set",
@@ -20,8 +20,8 @@ async function run(): Promise<void> {
   }
 
   const integrationConfig: ProviderConfig = {
-    apiToken: process.env.SENTINELONE_API_TOKEN,
-    serverUrl: process.env.SENTINELONE_API_SERVERURL,
+    apiToken: process.env.SENTINELONE_LOCAL_EXECUTION_API_TOKEN,
+    serverUrl: process.env.SENTINELONE_LOCAL_EXECUTION_API_URL,
   };
 
   const invocationArgs = {

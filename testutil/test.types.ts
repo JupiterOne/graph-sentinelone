@@ -48,16 +48,16 @@ export class ProviderClientMock extends ProviderClient {
 export function getProviderClient(
   providerConfig: ProviderConfig,
 ): ProviderClient {
-  return process.env.SENTINELONE_API_INTEGRATION !== undefined &&
-    process.env.SENTINELONE_API_INTEGRATION === "1"
+  return process.env.SENTINELONE_TEST_MODE === "integration"
     ? new ProviderClient(providerConfig)
     : new ProviderClientMock(providerConfig, mockGroupInfo, mockAgentInfo);
 }
 
 export function providerConfigEnv(): ProviderConfig {
   return {
-    apiToken: process.env.SENTINELONE_API_TOKEN || "token",
-    serverUrl: process.env.SENTINELONE_API_SERVERURL || "https://localhost",
+    apiToken: process.env.SENTINELONE_LOCAL_EXECUTION_API_TOKEN || "token",
+    serverUrl:
+      process.env.SENTINELONE_LOCAL_EXECUTION_API_URL || "https://localhost",
   };
 }
 
