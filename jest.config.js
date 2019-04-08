@@ -10,7 +10,7 @@ module.exports = {
     "!src/index.ts",
     "!src/executionHandler.ts",
     "!src/invocationValidator.ts",
-    "!src/ProviderClient.ts",
+    //    "!src/ProviderClient.ts",
   ],
   moduleFileExtensions: [...defaults.moduleFileExtensions, "ts"],
   testEnvironment: "node",

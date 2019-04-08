@@ -35,6 +35,7 @@ The following entity resources are ingested when the integration runs:
 
 | Example Entity Resource | \_type : \_class of the Entity    |
 | ----------------------- | --------------------------------- |
+| Account                 | `sentinelone_account` : `Account` |
 | Group                   | `sentinelone_group` : `Group`     |
 | Agent                   | `sentinelone_agent` : `HostAgent` |
 
@@ -42,8 +43,9 @@ The following entity resources are ingested when the integration runs:
 
 The following relationships are created/mapped:
 
-| From                | Type    | To                  |
-| ------------------- | ------- | ------------------- |
-| `sentinelone_group` | **HAS** | `sentinelone_agent` |
+| From                  | Type    | To                  |
+| --------------------- | ------- | ------------------- |
+| `sentinelone_account` | **HAS** | `sentinelone_group` |
+| `sentinelone_group`   | **HAS** | `sentinelone_agent` |
 
 [1]: https://jupiterone.io/
