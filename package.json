@@ -18,7 +18,7 @@
     "build:src": "babel src --extensions '.ts' --out-dir dist",
     "build:docs": "ts-node tools/docs.ts",
     "build:types": "tsc --project tsconfig.dist.json --declaration --emitDeclarationOnly",
-    "prepare": "yarn install && yarn build",
+    "prepare": "yarn build",
     "lint": "yarn lint:ts && yarn lint:md",
     "lint:md": "remark .",
     "lint:ts": "tslint --project .",
