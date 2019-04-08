@@ -33,11 +33,9 @@ Generating an API Token from your account WebUI:
 
 The following entity resources are ingested when the integration runs:
 
-| Example Entity Resource | \_type : \_class of the Entity    |
-| ----------------------- | --------------------------------- |
-| Account                 | `sentinelone_account` : `Account` |
-| Group                   | `sentinelone_group` : `Group`     |
-| Agent                   | `sentinelone_agent` : `HostAgent` |
+| ----------------------- | ----------------------------------- | | Account |
+`sentinelone_account` : `Account` | | Group | `sentinelone_group` : `Group` | |
+Agent | `sentinelone_agent` : `HostAgent` |
 
 ## Relationships
 
