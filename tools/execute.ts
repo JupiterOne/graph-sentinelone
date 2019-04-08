@@ -24,10 +24,7 @@ async function run(): Promise<void> {
     serverUrl: process.env.SENTINELONE_LOCAL_EXECUTION_API_URL,
   };
 
-  const invocationArgs = {
-    providerPrivateKey: "",
-    // providerPrivateKey: process.env.PROVIDER_LOCAL_EXECUTION_PRIVATE_KEY
-  };
+  const invocationArgs = {};
 
   logger.info(
     await executeSingleHandlerLocal(

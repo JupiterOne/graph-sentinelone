@@ -1,7 +1,7 @@
 {
   "name": "@jupiterone/jupiter-integration-sentinelone",
   "version": "0.1.0",
-  "description": "An example JupiterOne managed integration.",
+  "description": "A JupiterOne managed integration for https://www.sentinelone.com/",
   "main": "index.js",
   "repository": "https://github.com/JupiterOne/jupiter-integration-sentinelone",
   "license": "SEE LICENSE IN LICENSE",
