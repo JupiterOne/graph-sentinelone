@@ -4,7 +4,7 @@ node_js:
 
 deploy:
   provider: script
-  script: "yarn install && yarn build:publish"
+  script: "yarn build:publish"
   skip_cleanup: true
   on:
     branch: master
