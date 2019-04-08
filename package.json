@@ -14,7 +14,7 @@
     "build:src": "babel src --extensions '.ts' --out-dir dist",
     "build:files": "ts-node tools/copy-dist-files.ts",
     "build:types": "tsc --project tsconfig.dist.json --declaration --emitDeclarationOnly",
-    "build:publish": "yarn build && cd dist && yarn publish --access public",
+    "build:publish": "yarn build && cd dist && yarn publish --non-interactive --dry-run --access public",
     "lint": "yarn lint:ts && yarn lint:md",
     "lint:md": "remark .",
     "lint:ts": "tslint --project .",

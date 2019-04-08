@@ -51,3 +51,10 @@ if (docsExtension !== undefined) {
 } else {
   throw new Error("No documentation found!");
 }
+
+if (process.env.TRAVIS) {
+  fs.writeFileSync(
+    `${process.env.HOME}/.npmrc`,
+    "always-auth=true\n//registry.npmjs.org/:_authToken=${JUPITERONE_NPM_AUTH_TOKEN}",
+  );
+}
