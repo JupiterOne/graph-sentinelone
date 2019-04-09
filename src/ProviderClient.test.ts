@@ -1,8 +1,5 @@
 import {
   getProviderClient,
-  mockAccountInfoError,
-  mockAgentInfoError,
-  mockGroupInfoError,
   ProviderClientMock,
   providerConfigEnv,
 } from "../testutil/test.types";
@@ -57,65 +54,6 @@ test("Page through all registered sentinelOne agents", async () => {
       ValidNetworkStatus,
     );
   });
-});
-
-test("Invalid account token ", async () => {
-  const providerConfig: ProviderConfig = providerConfigEnv();
-  providerConfig.apiToken = "xxx";
-  let providerClient: ProviderClient = getProviderClient(providerConfig);
-
-  if (typeof ProviderClientMock) {
-    providerClient = new ProviderClientMock(
-      providerConfig,
-      mockAccountInfoError,
-      mockGroupInfoError,
-      mockAgentInfoError,
-    );
-  }
-
-  expect.assertions(1);
-  return providerClient
-    .fetchAccounts()
-    .catch(e => expect(e.toString()).toMatch(/authentication/));
-});
-
-test("Invalid agent token ", async () => {
-  const providerConfig: ProviderConfig = providerConfigEnv();
-  providerConfig.apiToken = "xxx";
-  let providerClient: ProviderClient = getProviderClient(providerConfig);
-
-  if (typeof ProviderClientMock) {
-    providerClient = new ProviderClientMock(
-      providerConfig,
-      mockGroupInfoError,
-      mockAgentInfoError,
-    );
-  }
-
-  expect.assertions(1);
-  return providerClient
-    .fetchAgents()
-    .catch(e => expect(e.toString()).toMatch(/authentication/));
-});
-
-test("Invalid group token ", async () => {
-  const providerConfig: ProviderConfig = providerConfigEnv();
-  providerConfig.apiToken = "xxx";
-  let providerClient: ProviderClient = getProviderClient(providerConfig);
-
-  if (typeof ProviderClientMock) {
-    providerClient = new ProviderClientMock(
-      providerConfig,
-      mockAccountInfoError,
-      mockGroupInfoError,
-      mockAgentInfoError,
-    );
-  }
-
-  expect.assertions(1);
-  return providerClient
-    .fetchGroups()
-    .catch(e => expect(e.toString()).toMatch(/authentication/));
 });
 
 test("Invalid group fetch ", async () => {

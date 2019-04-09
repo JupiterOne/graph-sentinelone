@@ -133,9 +133,7 @@ export function createAccountGroupRelationships(
 
   for (const group of groups) {
     const account = accountsById[group.siteId];
-    if (account !== undefined) {
-      relationships.push(createAccountGroupRelationship(account, group));
-    }
+    relationships.push(createAccountGroupRelationship(account, group));
   }
 
   return relationships;

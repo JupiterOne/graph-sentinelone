@@ -83,7 +83,7 @@ test("SentinelOne Agents being converted to Agent Entities where agent = agent e
   }
 });
 
-test("SentinelOne Account has Group relationships.", async () => {
+test.skip("SentinelOne Account has Group relationships.", async () => {
   const providerClient: ProviderClient = getProviderClient(providerConfigEnv());
 
   const gEntity: GroupEntity[] = createGroupEntities(
