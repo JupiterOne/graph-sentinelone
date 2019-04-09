@@ -1,11 +1,18 @@
 import {
   getProviderClient,
+  mockAccountInfoError,
   mockAgentInfoError,
   mockGroupInfoError,
   ProviderClientMock,
   providerConfigEnv,
 } from "../testutil/test.types";
-import { Agent, Group, ProviderClient, ProviderConfig } from "./ProviderClient";
+import {
+  Account,
+  Agent,
+  Group,
+  ProviderClient,
+  ProviderConfig,
+} from "./ProviderClient";
 
 const ValidGroupType = ["static", "dynamic"];
 const ValidScanStatus = ["started", "none", "finished", "aborted"];
@@ -15,6 +22,17 @@ const ValidNetworkStatus = [
   "disconnected",
   "disconnecting",
 ];
+
+test("Page through all sentinelOne accounts", async () => {
+  const providerClient: ProviderClient = getProviderClient(providerConfigEnv());
+  let accounts: Account[];
+
+  accounts = await providerClient.fetchAccounts();
+  expect(accounts).toBeDefined();
+  accounts.forEach(account => {
+    expect(account).toBeDefined();
+  });
+});
 
 test("Page through all sentinelOne groups", async () => {
   const providerClient: ProviderClient = getProviderClient(providerConfigEnv());
@@ -39,6 +57,26 @@ test("Page through all registered sentinelOne agents", async () => {
       ValidNetworkStatus,
     );
   });
+});
+
+test("Invalid account token ", async () => {
+  const providerConfig: ProviderConfig = providerConfigEnv();
+  providerConfig.apiToken = "xxx";
+  let providerClient: ProviderClient = getProviderClient(providerConfig);
+
+  if (typeof ProviderClientMock) {
+    providerClient = new ProviderClientMock(
+      providerConfig,
+      mockAccountInfoError,
+      mockGroupInfoError,
+      mockAgentInfoError,
+    );
+  }
+
+  expect.assertions(1);
+  return providerClient
+    .fetchAccounts()
+    .catch(e => expect(e.toString()).toMatch(/authentication/));
 });
 
 test("Invalid agent token ", async () => {
@@ -68,6 +106,7 @@ test("Invalid group token ", async () => {
   if (typeof ProviderClientMock) {
     providerClient = new ProviderClientMock(
       providerConfig,
+      mockAccountInfoError,
       mockGroupInfoError,
       mockAgentInfoError,
     );
