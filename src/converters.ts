@@ -2,7 +2,10 @@ import {
   EntityFromIntegration,
   RelationshipFromIntegration,
 } from "@jupiterone/jupiter-managed-integration-sdk";
-import { Agent, Group } from "./ProviderClient";
+import { Account, Agent, Group } from "./ProviderClient";
+
+export const ACCOUNT_ENTITY_TYPE = "sentinelone_account";
+export const ACCOUNT_ENTITY_CLASS = "Account";
 
 export const GROUP_ENTITY_TYPE = "sentinelone_group";
 export const GROUP_ENTITY_CLASS = "Group";
@@ -10,12 +13,30 @@ export const GROUP_ENTITY_CLASS = "Group";
 export const AGENT_ENTITY_TYPE = "sentinelone_agent";
 export const AGENT_ENTITY_CLASS = "HostAgent";
 
+export const ACCOUNT_GROUP_RELATIONSHIP_TYPE = "sentinelone_account_has_group";
+export const ACCOUNT_GROUP_RELATIONSHIP_CLASS = "HAS";
+
 export const GROUP_AGENT_RELATIONSHIP_TYPE = "sentinelone_group_has_agent";
 export const GROUP_AGENT_RELATIONSHIP_CLASS = "HAS";
+
+export interface AccountEntity extends EntityFromIntegration, Account {}
 
 export interface GroupEntity extends EntityFromIntegration, Group {}
 
 export interface AgentEntity extends EntityFromIntegration, Agent {}
+
+export function createAccountEntities(data: Account[]): AccountEntity[] {
+  return data.map(d => ({
+    _key: `${ACCOUNT_ENTITY_TYPE}-id-${d.id}`,
+    _type: ACCOUNT_ENTITY_TYPE,
+    _class: ACCOUNT_ENTITY_CLASS,
+    id: d.id,
+    displayName: d.name,
+    updatedAt: d.updatedAt,
+    createdAt: d.createdAt,
+    name: d.name,
+  }));
+}
 
 export function createGroupEntities(data: Group[]): GroupEntity[] {
   return data.map(d => ({
@@ -98,6 +119,39 @@ export function createAgentEntities(data: Agent[]): AgentEntity[] {
     mitigationModeSuspicious: d.mitigationModeSuspicious,
     isDecommissioned: d.isDecommissioned,
   }));
+}
+
+export function createAccountGroupRelationships(
+  accounts: AccountEntity[],
+  groups: GroupEntity[],
+): RelationshipFromIntegration[] {
+  const relationships = [];
+  const accountsById: { [id: string]: AccountEntity } = {};
+  for (const account of accounts) {
+    accountsById[account.id] = account;
+  }
+
+  for (const group of groups) {
+    const account = accountsById[group.siteId];
+    if (account !== undefined) {
+      relationships.push(createAccountGroupRelationship(account, group));
+    }
+  }
+
+  return relationships;
+}
+
+function createAccountGroupRelationship(
+  account: AccountEntity,
+  group: GroupEntity,
+): RelationshipFromIntegration {
+  return {
+    _key: `${account._key}_has_${group._key}`,
+    _type: ACCOUNT_GROUP_RELATIONSHIP_TYPE,
+    _class: ACCOUNT_GROUP_RELATIONSHIP_CLASS,
+    _fromEntityKey: account._key,
+    _toEntityKey: group._key,
+  };
 }
 
 export function createGroupAgentRelationships(

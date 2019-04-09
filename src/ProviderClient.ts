@@ -1,6 +1,13 @@
 import { IntegrationInstanceAuthenticationError } from "@jupiterone/jupiter-managed-integration-sdk";
 import "isomorphic-fetch";
 
+export interface Account {
+  updatedAt: string;
+  id: string;
+  createdAt: string;
+  name: string;
+}
+
 export interface Group {
   inherits?: boolean;
   name?: string;
@@ -9,7 +16,7 @@ export interface Group {
   totalAgents?: number;
   filterId?: string;
   rank?: number;
-  siteId?: string;
+  siteId: string;
   isDefault?: boolean;
   creatorId?: string;
   updatedAt?: string;
@@ -84,30 +91,47 @@ export interface Pagination {
 }
 
 export class ProviderClient {
+  protected accountPagination: Pagination;
   protected groupPagination: Pagination;
   protected agentPagination: Pagination;
+  private accountUrl: string;
   private agentUrl: string;
   private groupUrl: string;
   private header: {};
 
+  private accountInfoCallback: any;
   private groupInfoCallback: any;
   private agentInfoCallback: any;
 
   constructor(
     providerConfig: ProviderConfig,
+    accountInfoCallback?: () => Promise<{}>,
     groupInfoCallback?: () => Promise<{}>,
     agentInfoCallback?: () => Promise<{}>,
   ) {
+    this.accountPagination = {
+      totalItems: 0,
+      nextCursor: "",
+      cursorSet: false,
+    };
     this.groupPagination = { totalItems: 0, nextCursor: "", cursorSet: false };
     this.agentPagination = { totalItems: 0, nextCursor: "", cursorSet: false };
 
     this.header = {
       headers: { Authorization: `ApiToken ${providerConfig.apiToken}` },
     };
+    this.accountUrl = `${
+      providerConfig.serverUrl
+    }/web/api/v2.0/private/accounts`;
+
     this.agentUrl = `${providerConfig.serverUrl}/web/api/v2.0/agents`;
 
     this.groupUrl = `${providerConfig.serverUrl}/web/api/v2.0/groups`;
 
+    this.accountInfoCallback =
+      accountInfoCallback === undefined
+        ? this.fetchAccountsInfo
+        : accountInfoCallback;
     this.groupInfoCallback =
       groupInfoCallback === undefined
         ? this.fetchGroupsInfo
@@ -116,6 +140,29 @@ export class ProviderClient {
       agentInfoCallback === undefined
         ? this.fetchAgentsInfo
         : agentInfoCallback;
+  }
+
+  public async fetchAccountsInfo(): Promise<{}> {
+    let response: Response;
+    try {
+      if (this.accountPagination.cursorSet) {
+        response = await fetch(
+          `${this.accountUrl}&cursor=${this.accountPagination.nextCursor}`,
+          this.header,
+        );
+      } else {
+        response = await fetch(this.accountUrl, this.header);
+      }
+
+      if (response.status >= 400) {
+        throw new IntegrationInstanceAuthenticationError(
+          Error(response.statusText),
+        );
+      }
+    } catch (error) {
+      throw error;
+    }
+    return await response.json();
   }
 
   public async fetchGroupsInfo(): Promise<{}> {
@@ -130,7 +177,7 @@ export class ProviderClient {
         response = await fetch(this.groupUrl, this.header);
       }
 
-      if (response.status === 401) {
+      if (response.status >= 400) {
         throw new IntegrationInstanceAuthenticationError(
           Error(response.statusText),
         );
@@ -139,6 +186,31 @@ export class ProviderClient {
       throw error;
     }
     return await response.json();
+  }
+
+  public async fetchAccounts(): Promise<Account[]> {
+    try {
+      const accounts = [];
+
+      do {
+        const accountInfo = JSON.parse(
+          JSON.stringify(await this.accountInfoCallback()),
+        );
+
+        this.accountPagination = this.determineAdditionalPage(
+          accountInfo.pagination.nextCursor,
+          accountInfo.pagination.totalItems,
+        );
+
+        for (const account of accountInfo.data) {
+          accounts.push(this.mapToAccount(account));
+        }
+      } while (this.accountPagination.cursorSet);
+
+      return accounts;
+    } catch (error) {
+      throw error;
+    }
   }
 
   public async fetchGroups(): Promise<Group[]> {
@@ -178,7 +250,7 @@ export class ProviderClient {
         response = await fetch(this.agentUrl, this.header);
       }
 
-      if (response.status === 401) {
+      if (response.status >= 400) {
         throw new IntegrationInstanceAuthenticationError(
           Error(response.statusText),
         );
@@ -226,6 +298,17 @@ export class ProviderClient {
       cursorSet = true;
     }
     return { totalItems, nextCursor, cursorSet };
+  }
+
+  protected mapToAccount(a: string): Account {
+    const account = JSON.parse(JSON.stringify(a));
+
+    return {
+      updatedAt: account.updatedAt,
+      id: account.id,
+      createdAt: account.createdAt,
+      name: account.name,
+    };
   }
 
   protected mapToGroup(g: string): Group {

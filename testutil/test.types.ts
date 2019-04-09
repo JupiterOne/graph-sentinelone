@@ -6,8 +6,21 @@ import {
 } from "../src/ProviderClient";
 
 export class ProviderClientMock extends ProviderClient {
+  private accountPages = 0;
   private groupPages = 0;
   private agentPages = 0;
+
+  public setAccountPagination(
+    totalItems: number,
+    nextCursor: string,
+    cursorSet: boolean,
+  ) {
+    this.accountPagination = {
+      totalItems: 0,
+      nextCursor: "",
+      cursorSet: false,
+    };
+  }
 
   public setGroupPagination(
     totalItems: number,
@@ -34,6 +47,10 @@ export class ProviderClientMock extends ProviderClient {
       totalItems,
     );
 
+    if (nextCursor === "YWdlbnRfaWQ6NTgwMjkzODE=" && this.accountPages++ > 0) {
+      page.cursorSet = false;
+    }
+
     if (nextCursor === "AWdlbnRfaWQ6NTgwMjkzODE=" && this.agentPages++ > 0) {
       page.cursorSet = false;
     }
@@ -50,7 +67,12 @@ export function getProviderClient(
 ): ProviderClient {
   return process.env.SENTINELONE_TEST_MODE === "integration"
     ? new ProviderClient(providerConfig)
-    : new ProviderClientMock(providerConfig, mockGroupInfo, mockAgentInfo);
+    : new ProviderClientMock(
+        providerConfig,
+        mockAccountInfo,
+        mockGroupInfo,
+        mockAgentInfo,
+      );
 }
 
 export function providerConfigEnv(): ProviderConfig {
@@ -61,12 +83,40 @@ export function providerConfigEnv(): ProviderConfig {
   };
 }
 
+export async function mockAccountInfoError(): Promise<{}> {
+  throw new IntegrationInstanceAuthenticationError(Error("authentication"));
+}
+
 export async function mockGroupInfoError(): Promise<{}> {
   throw new IntegrationInstanceAuthenticationError(Error("authentication"));
 }
 
 export async function mockAgentInfoError(): Promise<{}> {
   throw new IntegrationInstanceAuthenticationError(Error("authentication"));
+}
+
+export async function mockAccountInfo(): Promise<{}> {
+  return {
+    pagination: {
+      totalItems: 2,
+      nextCursor: "YWdlbnRfaWQ6NTgwMjkzODE=",
+    },
+    errors: [{}],
+    data: [
+      {
+        updatedAt: "2018-02-27T04:49:26.257525Z",
+        id: "125494730938493804",
+        createdAt: "2018-02-27T04:49:26.257525Z",
+        name: "SentinelOne Account",
+      },
+      {
+        updatedAt: "2018-02-27T04:49:26.257525Z",
+        id: "125494730938493805",
+        createdAt: "2018-02-27T04:49:26.257525Z",
+        name: "SentinelOne Account",
+      },
+    ],
+  };
 }
 
 export async function mockAgentInfo(): Promise<{}> {
