@@ -10,7 +10,7 @@ import {
   AccountEntity,
   AGENT_ENTITY_TYPE,
   AgentEntity,
-  createAccountEntities,
+  createAccountEntity,
   createAccountGroupRelationships,
   createAgentEntities,
   createGroupAgentRelationships,
@@ -26,7 +26,7 @@ export default async function executionHandler(
   context: IntegrationExecutionContext<IntegrationInvocationEvent>,
 ): Promise<IntegrationExecutionResult> {
   try {
-    const { graph, persister, provider } = initializeContext(context);
+    const { graph, instance, persister, provider } = initializeContext(context);
 
     const [
       oldAccountEntities,
@@ -42,9 +42,10 @@ export default async function executionHandler(
       graph.findRelationshipsByType(GROUP_AGENT_RELATIONSHIP_TYPE),
     ]);
 
-    const accountEntities: AccountEntity[] = createAccountEntities(
-      await provider.fetchAccounts(),
-    );
+    const accountEntity: AccountEntity = createAccountEntity({
+      integrationInstanceId: instance.id,
+      name: instance.name,
+    });
     const groupEntities: GroupEntity[] = createGroupEntities(
       await provider.fetchGroups(),
     );
@@ -55,14 +56,14 @@ export default async function executionHandler(
     return {
       operations: await persister.publishPersisterOperations([
         [
-          ...persister.processEntities(oldAccountEntities, accountEntities),
+          ...persister.processEntities(oldAccountEntities, [accountEntity]),
           ...persister.processEntities(oldGroupEntities, groupEntities),
           ...persister.processEntities(oldAgentEntities, agentEntities),
         ],
         [
           ...persister.processRelationships(
             oldAccountGroupRelationships,
-            createAccountGroupRelationships(accountEntities, groupEntities),
+            createAccountGroupRelationships(accountEntity, groupEntities),
           ),
           ...persister.processRelationships(
             oldGroupAgentRelationships,

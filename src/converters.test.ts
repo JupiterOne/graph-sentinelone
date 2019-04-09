@@ -1,16 +1,15 @@
 import { RelationshipFromIntegration } from "@jupiterone/jupiter-managed-integration-sdk";
 import { getProviderClient, providerConfigEnv } from "../testutil/test.types";
-import { Account, Agent, ProviderClient } from "./ProviderClient";
+import { Agent, ProviderClient } from "./ProviderClient";
 
 import {
-  ACCOUNT_ENTITY_TYPE,
   ACCOUNT_GROUP_RELATIONSHIP_CLASS,
   ACCOUNT_GROUP_RELATIONSHIP_TYPE,
   AccountEntity,
   AGENT_ENTITY_CLASS,
   AGENT_ENTITY_TYPE,
   AgentEntity,
-  createAccountEntities,
+  createAccountEntity,
   createAccountGroupRelationships,
   createAgentEntities,
   createGroupAgentRelationships,
@@ -21,24 +20,6 @@ import {
   GroupEntity,
 } from "./converters";
 import { Group } from "./ProviderClient";
-
-test("SentinelOne Account being converted to Account Entity where account = account entity.", async () => {
-  const providerClient: ProviderClient = getProviderClient(providerConfigEnv());
-
-  const a: Account[] = await providerClient.fetchAccounts();
-  expect(a).toBeDefined();
-
-  const accountEntity: AccountEntity[] = createAccountEntities(a);
-
-  for (let i: number = 0; i < a.length; i++) {
-    expect(accountEntity[i].id).toEqual(a[i].id);
-    expect(accountEntity[i].name).toEqual(a[i].name);
-    expect(accountEntity[i]._key).toEqual(
-      `${ACCOUNT_ENTITY_TYPE}-id-${a[i].id}`,
-    );
-    expect(accountEntity[i].displayName).toEqual(a[i].name);
-  }
-});
 
 test("SentinelOne Group being converted to Group Entity where group = group entity.", async () => {
   const providerClient: ProviderClient = getProviderClient(providerConfigEnv());
@@ -89,9 +70,10 @@ test.skip("SentinelOne Account has Group relationships.", async () => {
   const gEntity: GroupEntity[] = createGroupEntities(
     await providerClient.fetchGroups(),
   );
-  const aEntity: AccountEntity[] = createAccountEntities(
-    await providerClient.fetchAccounts(),
-  );
+  const aEntity: AccountEntity = createAccountEntity({
+    integrationInstanceId: "id",
+    name: "name",
+  });
   const accountGroupRel: RelationshipFromIntegration[] = createAccountGroupRelationships(
     aEntity,
     gEntity,

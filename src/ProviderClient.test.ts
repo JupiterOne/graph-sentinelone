@@ -3,13 +3,7 @@ import {
   ProviderClientMock,
   providerConfigEnv,
 } from "../testutil/test.types";
-import {
-  Account,
-  Agent,
-  Group,
-  ProviderClient,
-  ProviderConfig,
-} from "./ProviderClient";
+import { Agent, Group, ProviderClient, ProviderConfig } from "./ProviderClient";
 
 const ValidGroupType = ["static", "dynamic"];
 const ValidScanStatus = ["started", "none", "finished", "aborted"];
@@ -19,17 +13,6 @@ const ValidNetworkStatus = [
   "disconnected",
   "disconnecting",
 ];
-
-test("Page through all sentinelOne accounts", async () => {
-  const providerClient: ProviderClient = getProviderClient(providerConfigEnv());
-  let accounts: Account[];
-
-  accounts = await providerClient.fetchAccounts();
-  expect(accounts).toBeDefined();
-  accounts.forEach(account => {
-    expect(account).toBeDefined();
-  });
-});
 
 test("Page through all sentinelOne groups", async () => {
   const providerClient: ProviderClient = getProviderClient(providerConfigEnv());

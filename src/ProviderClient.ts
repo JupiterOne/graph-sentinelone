@@ -1,13 +1,6 @@
 import { IntegrationInstanceAuthenticationError } from "@jupiterone/jupiter-managed-integration-sdk";
 import "isomorphic-fetch";
 
-export interface Account {
-  updatedAt: string;
-  id: string;
-  createdAt: string;
-  name: string;
-}
-
 export interface Group {
   inherits?: boolean;
   name?: string;
@@ -99,7 +92,6 @@ export class ProviderClient {
   private groupUrl: string;
   private header: {};
 
-  private accountInfoCallback: any;
   private groupInfoCallback: any;
   private agentInfoCallback: any;
 
@@ -128,10 +120,6 @@ export class ProviderClient {
 
     this.groupUrl = `${providerConfig.serverUrl}/web/api/v2.0/groups`;
 
-    this.accountInfoCallback =
-      accountInfoCallback === undefined
-        ? this.fetchAccountsInfo
-        : accountInfoCallback;
     this.groupInfoCallback =
       groupInfoCallback === undefined
         ? this.fetchGroupsInfo
@@ -186,31 +174,6 @@ export class ProviderClient {
       throw error;
     }
     return await response.json();
-  }
-
-  public async fetchAccounts(): Promise<Account[]> {
-    try {
-      const accounts = [];
-
-      do {
-        const accountInfo = JSON.parse(
-          JSON.stringify(await this.accountInfoCallback()),
-        );
-
-        this.accountPagination = this.determineAdditionalPage(
-          accountInfo.pagination.nextCursor,
-          accountInfo.pagination.totalItems,
-        );
-
-        for (const account of accountInfo.data) {
-          accounts.push(this.mapToAccount(account));
-        }
-      } while (this.accountPagination.cursorSet);
-
-      return accounts;
-    } catch (error) {
-      throw error;
-    }
   }
 
   public async fetchGroups(): Promise<Group[]> {
@@ -298,17 +261,6 @@ export class ProviderClient {
       cursorSet = true;
     }
     return { totalItems, nextCursor, cursorSet };
-  }
-
-  protected mapToAccount(a: string): Account {
-    const account = JSON.parse(JSON.stringify(a));
-
-    return {
-      updatedAt: account.updatedAt,
-      id: account.id,
-      createdAt: account.createdAt,
-      name: account.name,
-    };
   }
 
   protected mapToGroup(g: string): Group {
