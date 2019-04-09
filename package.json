@@ -5,6 +5,9 @@
   "main": "dist/index.js",
   "repository": "https://github.com/JupiterOne/jupiter-integration-sentinelone",
   "license": "SEE LICENSE IN LICENSE",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "LICENSE",
     "dist"
