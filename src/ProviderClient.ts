@@ -9,7 +9,7 @@ export interface Group {
   totalAgents?: number;
   filterId?: string;
   rank?: number;
-  siteId?: string;
+  siteId: string;
   isDefault?: boolean;
   creatorId?: string;
   updatedAt?: string;
@@ -84,8 +84,10 @@ export interface Pagination {
 }
 
 export class ProviderClient {
+  protected accountPagination: Pagination;
   protected groupPagination: Pagination;
   protected agentPagination: Pagination;
+  private accountUrl: string;
   private agentUrl: string;
   private groupUrl: string;
   private header: {};
@@ -95,15 +97,25 @@ export class ProviderClient {
 
   constructor(
     providerConfig: ProviderConfig,
+    accountInfoCallback?: () => Promise<{}>,
     groupInfoCallback?: () => Promise<{}>,
     agentInfoCallback?: () => Promise<{}>,
   ) {
+    this.accountPagination = {
+      totalItems: 0,
+      nextCursor: "",
+      cursorSet: false,
+    };
     this.groupPagination = { totalItems: 0, nextCursor: "", cursorSet: false };
     this.agentPagination = { totalItems: 0, nextCursor: "", cursorSet: false };
 
     this.header = {
       headers: { Authorization: `ApiToken ${providerConfig.apiToken}` },
     };
+    this.accountUrl = `${
+      providerConfig.serverUrl
+    }/web/api/v2.0/private/accounts`;
+
     this.agentUrl = `${providerConfig.serverUrl}/web/api/v2.0/agents`;
 
     this.groupUrl = `${providerConfig.serverUrl}/web/api/v2.0/groups`;
@@ -118,6 +130,29 @@ export class ProviderClient {
         : agentInfoCallback;
   }
 
+  public async fetchAccountsInfo(): Promise<{}> {
+    let response: Response;
+    try {
+      if (this.accountPagination.cursorSet) {
+        response = await fetch(
+          `${this.accountUrl}&cursor=${this.accountPagination.nextCursor}`,
+          this.header,
+        );
+      } else {
+        response = await fetch(this.accountUrl, this.header);
+      }
+
+      if (response.status >= 400) {
+        throw new IntegrationInstanceAuthenticationError(
+          Error(response.statusText),
+        );
+      }
+    } catch (error) {
+      throw error;
+    }
+    return await response.json();
+  }
+
   public async fetchGroupsInfo(): Promise<{}> {
     let response: Response;
     try {
@@ -130,7 +165,7 @@ export class ProviderClient {
         response = await fetch(this.groupUrl, this.header);
       }
 
-      if (response.status === 401) {
+      if (response.status >= 400) {
         throw new IntegrationInstanceAuthenticationError(
           Error(response.statusText),
         );
@@ -178,7 +213,7 @@ export class ProviderClient {
         response = await fetch(this.agentUrl, this.header);
       }
 
-      if (response.status === 401) {
+      if (response.status >= 400) {
         throw new IntegrationInstanceAuthenticationError(
           Error(response.statusText),
         );

@@ -3,9 +3,14 @@ import { getProviderClient, providerConfigEnv } from "../testutil/test.types";
 import { Agent, ProviderClient } from "./ProviderClient";
 
 import {
+  ACCOUNT_GROUP_RELATIONSHIP_CLASS,
+  ACCOUNT_GROUP_RELATIONSHIP_TYPE,
+  AccountEntity,
   AGENT_ENTITY_CLASS,
   AGENT_ENTITY_TYPE,
   AgentEntity,
+  createAccountEntity,
+  createAccountGroupRelationships,
   createAgentEntities,
   createGroupAgentRelationships,
   createGroupEntities,
@@ -56,6 +61,27 @@ test("SentinelOne Agents being converted to Agent Entities where agent = agent e
     expect(agentEntity[i]._class).toEqual(AGENT_ENTITY_CLASS);
     expect(agentEntity[i]._key).toEqual(`${AGENT_ENTITY_TYPE}-id-${a[i].id}`);
     expect(agentEntity[i].displayName).toEqual(`${a[i].computerName}`);
+  }
+});
+
+test.skip("SentinelOne Account has Group relationships.", async () => {
+  const providerClient: ProviderClient = getProviderClient(providerConfigEnv());
+
+  const gEntity: GroupEntity[] = createGroupEntities(
+    await providerClient.fetchGroups(),
+  );
+  const aEntity: AccountEntity = createAccountEntity({
+    integrationInstanceId: "id",
+    name: "name",
+  });
+  const accountGroupRel: RelationshipFromIntegration[] = createAccountGroupRelationships(
+    aEntity,
+    gEntity,
+  );
+
+  for (const rel of accountGroupRel) {
+    expect(rel._type).toEqual(ACCOUNT_GROUP_RELATIONSHIP_TYPE);
+    expect(rel._class).toEqual(ACCOUNT_GROUP_RELATIONSHIP_CLASS);
   }
 });
 
