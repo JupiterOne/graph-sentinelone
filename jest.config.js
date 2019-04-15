@@ -10,7 +10,7 @@ module.exports = {
     "!src/converters.ts",
     "!src/index.ts",
     "!src/executionHandler.ts",
-    "!src/invocationValidator.ts",
+    "!src/initializeContext.ts",
     "!src/ProviderClient.ts",
   ],
   moduleFileExtensions: [...defaults.moduleFileExtensions, "ts"],

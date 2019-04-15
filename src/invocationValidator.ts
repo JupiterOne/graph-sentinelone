@@ -1,9 +1,11 @@
 import {
   IntegrationExecutionContext,
   IntegrationInstanceAuthenticationError,
+  IntegrationInstanceConfigError,
   IntegrationInvocationEvent,
 } from "@jupiterone/jupiter-managed-integration-sdk";
-import initializeContext from "./initializeContext";
+
+import { ProviderClient, ProviderConfig } from "./ProviderClient";
 
 /**
  * Performs validation of the execution before the execution handler function is
@@ -24,9 +26,30 @@ import initializeContext from "./initializeContext";
 export default async function invocationValidator(
   executionContext: IntegrationExecutionContext<IntegrationInvocationEvent>,
 ) {
-  const sentinelOneExectionContext = initializeContext(executionContext);
+  const { config } = executionContext.instance;
 
-  sentinelOneExectionContext.provider.fetchGroups().catch(error => {
-    throw new IntegrationInstanceAuthenticationError(error);
-  });
+  if (!config) {
+    throw new Error(
+      "Provider config must be provided by the exectution environment",
+    );
+  }
+
+  if (!config.apiToken || !config.serverUrl) {
+    throw new IntegrationInstanceConfigError(
+      "Config sentinelOne apiToken, and serverUrl must be provided by the user",
+    );
+  }
+
+  const providerConfig: ProviderConfig = {
+    apiToken: config.apiToken,
+    serverUrl: config.serverUrl,
+  };
+
+  const provider = new ProviderClient(providerConfig);
+
+  try {
+    await provider.fetchGroups();
+  } catch (err) {
+    throw new IntegrationInstanceAuthenticationError(err);
+  }
 }

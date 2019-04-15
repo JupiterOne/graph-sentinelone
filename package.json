@@ -16,12 +16,11 @@
     "start": "ts-node --require dotenv/config tools/execute.ts | bunyan",
     "start:graph": "docker run -d --rm --name jupiterone-local-graph -p 8182:8182 tinkerpop/gremlin-server:3.3",
     "stop:graph": "docker stop jupiterone-local-graph",
-    "prebuild": "rm -rf dist/*",
-    "build": "yarn build:types && yarn build:src && yarn build:docs",
+    "prebuild": "yarn test",
+    "build": "rm -rf dist/* && yarn build:types && yarn build:src && yarn build:docs",
     "build:src": "babel src --extensions '.ts' --out-dir dist",
     "build:docs": "ts-node tools/docs.ts",
     "build:types": "tsc --project tsconfig.dist.json --declaration --emitDeclarationOnly",
-    "prepare": "yarn build",
     "lint": "yarn lint:ts && yarn lint:md",
     "lint:md": "remark .",
     "lint:ts": "tslint --project .",
@@ -32,7 +31,7 @@
     "isomorphic-fetch": "^2.2.1"
   },
   "peerDependencies": {
-    "@jupiterone/jupiter-managed-integration-sdk": "^21.0.0"
+    "@jupiterone/jupiter-managed-integration-sdk": "^21.1.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -41,7 +40,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-typescript": "^7.1.0",
-    "@jupiterone/jupiter-managed-integration-sdk": "^21.0.0",
+    "@jupiterone/jupiter-managed-integration-sdk": "^21.1.7",
     "@types/bunyan": "^1.8.5",
     "@types/fs-extra": "^5.0.5",
     "@types/jest": "^24.0.0",
