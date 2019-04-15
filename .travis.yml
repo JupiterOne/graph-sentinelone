@@ -1,15 +1,24 @@
 language: node_js
 node_js:
-  - '8.10'
-branches:
-  only:
-    - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
+  - '8'
+  - '10'
+  - '11'
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always
+
+script: yarn build
+
 deploy:
   provider: npm
-  skip_cleanup: true
   email: npm@jupiterone.io
   api_key:
     secure: bIS2EpEkgb1qgkBPqQdlCNd0CKZhp6VpF7wfP/jUcsAB+jnbLAggPhjFhxy2AvNLORBv9RrNp+XZ7eOOOfNf9XhTOJ7GEaSIuqI/aeLHO7r+qkZynWA9cavVk6hRv9QVxLN5iVS/KrraBwh3+lEbeeMSIIrDVcFFi6kJQzzL/Ar64IHaKN9htz/vksB9Igdh4EbLXWWxynZ3LAXve+I1ZofDFL0dsNUYJPKhtkhsxLkwOFw+UrUZ4xDoo1QjeHV4XtSD2cicwVI+5KqZznUhYFe+cCrL4vBMyqPalY0CyLYAZJhKgx8TKPh5x4fs5HrA2H2ABClutyrAO7wwcmmj6KfjH2kiiYjh5yd3QjptFeqs0oYy0Jw9oEmoEStCX+HjofIf98WHb+h56LGcN/w5/67ZPvBhWKYml3Dvy172YAqHRGmK/+ScfPAtt6LKYYpwnk06hLfcyJSGT7XEc0L/xyVMtuL3vYrQ/wqs/jHwH9LYt8+RCgkRv7fFt/xkqX4Z9CtS1xlqpuPeazxgV7c+wv2fzE9LeJMdu0P/ekRiHHebKToW0aVHWKls+dFva/ko2/jAJ+BtCn7Z26CL6dDYaHGxx3eWBDHQ/Y4fVSlx27/f7H6HBft8avlRXU9HnfeZr1L3Nemd+xq/gZtsMO3lyS1BRzV5mwrqFJWrtpk7I78=
+  skip_cleanup: true
   on:
     tags: true
+    branch: master
     repo: JupiterOne/jupiter-integration-sentinelone
+    node: '8'
