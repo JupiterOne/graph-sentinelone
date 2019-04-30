@@ -1,70 +1,59 @@
 import {
-  IntegrationExecutionContext,
   IntegrationInstanceAuthenticationError,
-  IntegrationInvocationEvent,
+  IntegrationValidationContext,
 } from "@jupiterone/jupiter-managed-integration-sdk";
 
-import { invocationValidator } from "./";
-import { ProviderClient } from "./ProviderClient";
+import invocationValidator from "./invocationValidator";
+import makeRequest from "./sentinelone/makeRequest";
 
-jest.mock("./ProviderClient");
+jest.mock("./sentinelone/makeRequest");
 
-let executionContext: IntegrationExecutionContext<IntegrationInvocationEvent>;
+const mockMakeRequest = makeRequest as jest.Mock;
+
+let validationContext: IntegrationValidationContext;
 
 beforeEach(() => {
-  (ProviderClient as jest.Mock).mockImplementation(() => {
-    return {
-      fetchGroups: () => {
-        return [];
-      },
-    };
-  });
+  mockMakeRequest.mockResolvedValue([]);
 
-  executionContext = {
+  validationContext = {
     instance: {
       config: {
         apiToken: "thetoken",
         serverUrl: "theurl",
       },
     },
-  } as IntegrationExecutionContext<IntegrationInvocationEvent>;
+  } as IntegrationValidationContext;
 });
 
 test("undefined config", async () => {
-  delete executionContext.instance.config;
-  await expect(invocationValidator(executionContext)).rejects.toThrowError(
+  delete validationContext.instance.config;
+  await expect(invocationValidator(validationContext)).rejects.toThrowError(
     /config must be provided/,
   );
 });
 
 test("blank token", async () => {
-  executionContext.instance.config.apiToken = "";
-  await expect(invocationValidator(executionContext)).rejects.toThrowError(
+  validationContext.instance.config.apiToken = "";
+  await expect(invocationValidator(validationContext)).rejects.toThrowError(
     /apiToken/,
   );
 });
 
 test("blank serverUrl", async () => {
-  executionContext.instance.config.serverUrl = "";
-  await expect(invocationValidator(executionContext)).rejects.toThrowError(
+  validationContext.instance.config.serverUrl = "";
+  await expect(invocationValidator(validationContext)).rejects.toThrowError(
     /serverUrl/,
   );
 });
 
 test("invalid credentials", async () => {
-  (ProviderClient as jest.Mock).mockImplementation(() => {
-    return {
-      fetchGroups: () => {
-        throw new Error("auth failure");
-      },
-    };
-  });
+  mockMakeRequest.mockRejectedValue({ statusCode: 401 });
 
-  await expect(invocationValidator(executionContext)).rejects.toThrow(
+  await expect(invocationValidator(validationContext)).rejects.toThrow(
     IntegrationInstanceAuthenticationError,
   );
 });
 
 test("valid config", async () => {
-  await expect(invocationValidator(executionContext)).resolves.toBeUndefined();
+  await invocationValidator(validationContext);
 });

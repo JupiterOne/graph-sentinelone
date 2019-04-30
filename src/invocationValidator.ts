@@ -1,8 +1,7 @@
 import {
-  IntegrationExecutionContext,
   IntegrationInstanceAuthenticationError,
   IntegrationInstanceConfigError,
-  IntegrationInvocationEvent,
+  IntegrationValidationContext,
 } from "@jupiterone/jupiter-managed-integration-sdk";
 
 import { ProviderClient, ProviderConfig } from "./ProviderClient";
@@ -11,22 +10,22 @@ import { ProviderClient, ProviderConfig } from "./ProviderClient";
  * Performs validation of the execution before the execution handler function is
  * invoked.
  *
- * At a minimum, integrations should ensure that the
- * `executionContext.instance.config` is valid. Integrations that require
- * additional information in `executionContext.invocationArgs` should also
- * validate those properties. It is also helpful to perform authentication with
- * the provider to ensure that credentials are valid.
+ * At a minimum, integrations should ensure that the `context.instance.config`
+ * is valid. Integrations that require additional information in
+ * `context.invocationArgs` should also validate those properties. It is also
+ * helpful to perform authentication with the provider to ensure that
+ * credentials are valid.
  *
  * The function will be awaited to support connecting to the provider for this
  * purpose.
  *
- * @param executionContext
+ * @param context
  */
 
 export default async function invocationValidator(
-  executionContext: IntegrationExecutionContext<IntegrationInvocationEvent>,
+  context: IntegrationValidationContext,
 ) {
-  const { config } = executionContext.instance;
+  const { config } = context.instance;
 
   if (!config) {
     throw new Error(
@@ -50,6 +49,10 @@ export default async function invocationValidator(
   try {
     await provider.fetchGroups();
   } catch (err) {
-    throw new IntegrationInstanceAuthenticationError(err);
+    if (err.statusCode === 401) {
+      throw new IntegrationInstanceAuthenticationError(err);
+    } else {
+      throw err;
+    }
   }
 }

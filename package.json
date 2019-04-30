@@ -28,10 +28,10 @@
     "test": "jest"
   },
   "dependencies": {
-    "isomorphic-fetch": "^2.2.1"
+    "node-fetch": "^2.4.1"
   },
   "peerDependencies": {
-    "@jupiterone/jupiter-managed-integration-sdk": "^21.1.7"
+    "@jupiterone/jupiter-managed-integration-sdk": "^23.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -40,11 +40,12 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-typescript": "^7.1.0",
-    "@jupiterone/jupiter-managed-integration-sdk": "^21.1.7",
+    "@jupiterone/jupiter-managed-integration-sdk": "^23.0.1",
     "@types/bunyan": "^1.8.5",
     "@types/fs-extra": "^5.0.5",
     "@types/jest": "^24.0.0",
     "@types/node": "^10.12.20",
+    "@types/node-fetch": "^2.3.3",
     "@types/request": "^2.48.1",
     "bunyan": "^1.8.12",
     "dotenv": "^7.0.0",
