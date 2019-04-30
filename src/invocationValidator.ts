@@ -49,6 +49,10 @@ export default async function invocationValidator(
   try {
     await provider.fetchGroups();
   } catch (err) {
-    throw new IntegrationInstanceAuthenticationError(err);
+    if (err.statusCode === 401) {
+      throw new IntegrationInstanceAuthenticationError(err);
+    } else {
+      throw err;
+    }
   }
 }

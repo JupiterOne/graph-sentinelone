@@ -137,11 +137,7 @@ Set the following environment variables in the JupitorOne configuration UI or in
 your local environment for testing
 
 - `SENTINELONE_LOCAL_EXECUTION_API_TOKEN`
-- `SENTINELONE_LOCAL_EXECUTION_API_URL` - `"https://localhost"`
-- `SENTINELONE_TEST_MODE`
-
-To perform integration tests with your SentinelOne account, set the
-`SENTINELONE_TEST_MODE=integration` before running tests.
+- `SENTINELONE_LOCAL_EXECUTION_API_URL`
 
 ### Running tests
 

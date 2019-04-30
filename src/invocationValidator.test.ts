@@ -4,20 +4,16 @@ import {
 } from "@jupiterone/jupiter-managed-integration-sdk";
 
 import invocationValidator from "./invocationValidator";
-import { ProviderClient } from "./ProviderClient";
+import makeRequest from "./sentinelone/makeRequest";
 
-jest.mock("./ProviderClient");
+jest.mock("./sentinelone/makeRequest");
+
+const mockMakeRequest = makeRequest as jest.Mock;
 
 let validationContext: IntegrationValidationContext;
 
 beforeEach(() => {
-  (ProviderClient as jest.Mock).mockImplementation(() => {
-    return {
-      fetchGroups: () => {
-        return [];
-      },
-    };
-  });
+  mockMakeRequest.mockResolvedValue([]);
 
   validationContext = {
     instance: {
@@ -51,13 +47,7 @@ test("blank serverUrl", async () => {
 });
 
 test("invalid credentials", async () => {
-  (ProviderClient as jest.Mock).mockImplementation(() => {
-    return {
-      fetchGroups: () => {
-        throw new Error("auth failure");
-      },
-    };
-  });
+  mockMakeRequest.mockRejectedValue({ statusCode: 401 });
 
   await expect(invocationValidator(validationContext)).rejects.toThrow(
     IntegrationInstanceAuthenticationError,
@@ -65,5 +55,5 @@ test("invalid credentials", async () => {
 });
 
 test("valid config", async () => {
-  await expect(invocationValidator(validationContext)).resolves.toBeUndefined();
+  await invocationValidator(validationContext);
 });
