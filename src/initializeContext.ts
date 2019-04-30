@@ -1,21 +1,20 @@
 import {
   GraphClient,
   IntegrationExecutionContext,
-  IntegrationInvocationEvent,
   PersisterClient,
 } from "@jupiterone/jupiter-managed-integration-sdk";
 
 import { ProviderClient } from "./ProviderClient";
 
 export interface SentinelOneExecutionContext
-  extends IntegrationExecutionContext<IntegrationInvocationEvent> {
+  extends IntegrationExecutionContext {
   graph: GraphClient;
   persister: PersisterClient;
   provider: ProviderClient;
 }
 
 export default function initializeContext(
-  context: IntegrationExecutionContext<IntegrationInvocationEvent>,
+  context: IntegrationExecutionContext,
 ): SentinelOneExecutionContext {
   return {
     ...context,

@@ -1,7 +1,6 @@
 import {
   IntegrationExecutionContext,
   IntegrationExecutionResult,
-  IntegrationInvocationEvent,
 } from "@jupiterone/jupiter-managed-integration-sdk";
 
 import {
@@ -23,7 +22,7 @@ import {
 import initializeContext from "./initializeContext";
 
 export default async function executionHandler(
-  context: IntegrationExecutionContext<IntegrationInvocationEvent>,
+  context: IntegrationExecutionContext,
 ): Promise<IntegrationExecutionResult> {
   try {
     const { graph, instance, persister, provider } = initializeContext(context);

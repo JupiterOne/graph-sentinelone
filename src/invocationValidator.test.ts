@@ -1,15 +1,14 @@
 import {
-  IntegrationExecutionContext,
   IntegrationInstanceAuthenticationError,
-  IntegrationInvocationEvent,
+  IntegrationValidationContext,
 } from "@jupiterone/jupiter-managed-integration-sdk";
 
-import { invocationValidator } from "./";
+import invocationValidator from "./invocationValidator";
 import { ProviderClient } from "./ProviderClient";
 
 jest.mock("./ProviderClient");
 
-let executionContext: IntegrationExecutionContext<IntegrationInvocationEvent>;
+let validationContext: IntegrationValidationContext;
 
 beforeEach(() => {
   (ProviderClient as jest.Mock).mockImplementation(() => {
@@ -20,33 +19,33 @@ beforeEach(() => {
     };
   });
 
-  executionContext = {
+  validationContext = {
     instance: {
       config: {
         apiToken: "thetoken",
         serverUrl: "theurl",
       },
     },
-  } as IntegrationExecutionContext<IntegrationInvocationEvent>;
+  } as IntegrationValidationContext;
 });
 
 test("undefined config", async () => {
-  delete executionContext.instance.config;
-  await expect(invocationValidator(executionContext)).rejects.toThrowError(
+  delete validationContext.instance.config;
+  await expect(invocationValidator(validationContext)).rejects.toThrowError(
     /config must be provided/,
   );
 });
 
 test("blank token", async () => {
-  executionContext.instance.config.apiToken = "";
-  await expect(invocationValidator(executionContext)).rejects.toThrowError(
+  validationContext.instance.config.apiToken = "";
+  await expect(invocationValidator(validationContext)).rejects.toThrowError(
     /apiToken/,
   );
 });
 
 test("blank serverUrl", async () => {
-  executionContext.instance.config.serverUrl = "";
-  await expect(invocationValidator(executionContext)).rejects.toThrowError(
+  validationContext.instance.config.serverUrl = "";
+  await expect(invocationValidator(validationContext)).rejects.toThrowError(
     /serverUrl/,
   );
 });
@@ -60,11 +59,11 @@ test("invalid credentials", async () => {
     };
   });
 
-  await expect(invocationValidator(executionContext)).rejects.toThrow(
+  await expect(invocationValidator(validationContext)).rejects.toThrow(
     IntegrationInstanceAuthenticationError,
   );
 });
 
 test("valid config", async () => {
-  await expect(invocationValidator(executionContext)).resolves.toBeUndefined();
+  await expect(invocationValidator(validationContext)).resolves.toBeUndefined();
 });
