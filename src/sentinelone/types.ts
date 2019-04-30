@@ -6,7 +6,7 @@ export interface SentinelOneApiResponse<T> {
 
 export interface SentinelOneApiPagination {
   totalItems: number;
-  nextCursor: string;
+  nextCursor?: string;
 }
 
 export interface SentinelOneGroup {
