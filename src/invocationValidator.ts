@@ -47,7 +47,7 @@ export default async function invocationValidator(
   const provider = new ProviderClient(providerConfig);
 
   try {
-    await provider.fetchGroups();
+    await provider.validateAccess();
   } catch (err) {
     if (err.statusCode === 401) {
       throw new IntegrationInstanceAuthenticationError(err);
