@@ -54,6 +54,14 @@ test("invalid credentials", async () => {
   );
 });
 
+test("invalid credentials and status code is not 401", async () => {
+  mockMakeRequest.mockRejectedValue({ statusCode: 222 });
+
+  await expect(invocationValidator(validationContext)).rejects.toEqual({
+    statusCode: 222,
+  });
+});
+
 test("valid config", async () => {
   await invocationValidator(validationContext);
 });

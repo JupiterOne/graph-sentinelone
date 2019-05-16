@@ -13,10 +13,10 @@ export interface GroupEntity extends EntityFromIntegration {
   siteId: string;
   isDefault?: boolean;
   creatorId?: string;
-  updatedAt?: string;
+  updatedAt?: number;
   type?: string;
   id: string;
-  createdAt?: string;
+  createdAt?: number;
 }
 
 export interface AgentEntity extends EntityFromIntegration {
@@ -30,10 +30,10 @@ export interface AgentEntity extends EntityFromIntegration {
   allowRemoteShell?: boolean;
   scanStatus?: string;
   consoleMigrationStatus?: string;
-  updatedAt?: string;
+  updatedAt?: number;
   osType?: string;
   id: string;
-  createdAt?: string;
+  createdAt?: number;
   externalIp?: string;
   computerName?: string;
   modelName?: string;
@@ -43,21 +43,21 @@ export interface AgentEntity extends EntityFromIntegration {
   osUsername?: string;
   groupName?: string;
   infected?: boolean;
-  policyUpdatedAt?: string;
+  policyUpdatedAt?: number;
   cpuId?: string;
-  registeredAt?: string;
+  registeredAt?: number;
   activeThreats?: number;
-  groupUpdatedAt?: string;
+  groupUpdatedAt?: number;
   machineType?: string;
   groupIp?: string;
-  osStartTime?: string;
+  osStartTime?: number;
   osRevision?: string;
-  scanAbortedAt?: string;
+  scanAbortedAt?: number;
   siteId?: string;
-  scanStartedAt?: string;
+  scanStartedAt?: number;
   isPendingUninstall?: boolean;
-  scanFinishedAt?: string;
-  lastActiveDate?: string;
+  scanFinishedAt?: number;
+  lastActiveDate?: number;
   groupId: string;
   isActive?: boolean;
   agentVersion?: string;

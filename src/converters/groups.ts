@@ -2,6 +2,7 @@ import { RelationshipFromIntegration } from "@jupiterone/jupiter-managed-integra
 
 import { SentinelOneGroup } from "../sentinelone/types";
 import { AgentEntity, GroupEntity } from "../types";
+import getTime from "../utils/getTime";
 
 export const GROUP_ENTITY_TYPE = "sentinelone_group";
 export const GROUP_ENTITY_CLASS = "Group";
@@ -26,9 +27,9 @@ export function createGroupEntities(data: SentinelOneGroup[]): GroupEntity[] {
     siteId: d.siteId,
     isDefault: d.isDefault,
     creatorId: d.creatorId,
-    updatedAt: d.updatedAt,
+    updatedAt: getTime(d.updatedAt),
     type: d.type,
-    createdAt: d.createdAt,
+    createdAt: getTime(d.createdAt),
   }));
 }
 
