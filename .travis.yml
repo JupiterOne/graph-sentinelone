@@ -20,5 +20,5 @@ deploy:
   on:
     tags: true
     branch: master
-    repo: JupiterOne/jupiter-integration-sentinelone
+    repo: JupiterOne/graph-sentinelone
     node: '8'
