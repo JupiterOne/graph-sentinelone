@@ -1,6 +1,6 @@
 {
   "name": "@jupiterone/jupiter-integration-sentinelone",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A JupiterOne managed integration for https://www.sentinelone.com/",
   "main": "dist/index.js",
   "repository": "https://github.com/JupiterOne/jupiter-integration-sentinelone",
