@@ -1,6 +1,7 @@
 import {
   IntegrationExecutionContext,
   IntegrationExecutionResult,
+  IntegrationRelationship,
 } from "@jupiterone/jupiter-managed-integration-sdk";
 import {
   ACCOUNT_ENTITY_TYPE,
@@ -49,11 +50,11 @@ export default async function executionHandler(
         ],
         [
           ...persister.processRelationships(
-            oldAccountGroupRelationships,
+            oldAccountGroupRelationships as IntegrationRelationship[],
             createAccountGroupRelationships(accountEntity, groupEntities),
           ),
           ...persister.processRelationships(
-            oldGroupAgentRelationships,
+            oldGroupAgentRelationships as IntegrationRelationship[],
             createGroupAgentRelationships(groupEntities, agentEntities),
           ),
         ],
