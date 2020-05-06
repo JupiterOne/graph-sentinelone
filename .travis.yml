@@ -19,4 +19,4 @@ deploy:
     tags: true
     branch: master
     repo: JupiterOne/graph-sentinelone
-    node: '8'
+    node: '12'
