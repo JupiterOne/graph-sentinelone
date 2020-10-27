@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should collect data 1`] = `
+Object {
+  "collectedEntities": Array [
+    Object {
+      "_class": Array [
+        "Account",
+      ],
+      "_key": "sentinelone_account-local-integration-instance",
+      "_rawData": Array [],
+      "_type": "sentinelone_account",
+      "createdOn": undefined,
+      "displayName": "Local Integration",
+      "name": "Local Integration",
+    },
+  ],
+  "collectedRelationships": Array [],
+  "encounteredTypes": Array [
+    "sentinelone_account",
+  ],
+  "numCollectedEntities": 1,
+  "numCollectedRelationships": 0,
+}
+`;
