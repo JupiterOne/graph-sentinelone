@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.4.0 2020-10-29
+
+### Changed
+
+- Upgrade SDK v4
+
 ## 0.3.0 2020-10-27
 
 This release migrates to the new integration SDK.
