@@ -1,5 +1,26 @@
 # Integration with JupiterOne
 
+## SentinelOne + JupiterOne Integration Benefits
+
+- Visualize SentinelOne endpoint agents and the devices they protect in the
+  JupiterOne graph.
+- Map SentinelOne endpoint agents to devices and devices to the employee who is
+  the owner.  
+- Monitor changes to SentinelOne endpoint agents and devices using JupiterOne
+  alerts.
+
+## How it Works
+
+- JupiterOne periodically fetches SentinelOne endpoint agents to update the graph.
+- Write JupiterOne queries to review and monitor updates to the graph.
+- Configure alerts to take action when the JupiterOne graph changes.
+
+## Requirements
+
+- JupiterOne requires the SentinelOne management server hostname/url. 
+JupiterOne also requires the API Token used to authenticate with SentinelOne.
+- You must have permission in JupiterOne to install new integrations.
+
 ## Setup
 
 The integration authenticates using an API Token.
