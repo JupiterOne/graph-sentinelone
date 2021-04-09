@@ -1,6 +1,7 @@
 import {
   createDirectRelationship,
   Entity,
+  IntegrationError,
   IntegrationStep,
   IntegrationStepExecutionContext,
   RelationshipClass,
@@ -48,9 +49,15 @@ export async function fetchAgents({
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
 
-  const groupIdToKeyMap: GroupIdKeyMap = await jobState.getData(
+  const groupIdToKeyMap = await jobState.getData<GroupIdKeyMap>(
     DATA_GROUP_ID_KEY_MAP,
   );
+  if (!groupIdToKeyMap) {
+    throw new IntegrationError({
+      code: 'MISSING_ACCCOUNT_GROUP',
+      message: 'Unable to find Account Group for Agent',
+    });
+  }
 
   await apiClient.iterateAgents(async (agent) => {
     const agentEntity = await jobState.addEntity(createAgentEntity(agent));

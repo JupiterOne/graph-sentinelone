@@ -82,6 +82,7 @@ test('createAgentEntity', () => {
     _class: ['HostAgent'],
     _key: 'sentinelone_agent-id-225494730938493804',
     _type: 'sentinelone_agent',
+    function: 'anti-malware',
     activeThreats: 3,
     adComputerDistinguishedName: undefined,
     agentVersion: '2.5.0.2417',

@@ -66,6 +66,7 @@ export function createAgentEntity(d: SentinelOneAgent): Entity {
         _key: `${AGENT_ENTITY_TYPE}-id-${d.id}`,
         _type: AGENT_ENTITY_TYPE,
         _class: AGENT_ENTITY_CLASS,
+        function: 'anti-malware',
         displayName: d.computerName,
         domain: d.domain,
         appsVulnerabilityStatus: d.appsVulnerabilityStatus,

@@ -8,6 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.4.2 2021-04-09
+
+### Added
+
+- Added additional properties to `sentinelone_agent`:
+
+  - `function: 'anti-malware'`
+
 ## 0.4.0 2020-10-29
 
 ### Changed
