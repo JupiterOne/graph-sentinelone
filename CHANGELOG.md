@@ -12,7 +12,9 @@ and this project adheres to
 
 ### Added
 
-- `function` property of 'anti-malware' to `sentinelone_agent` entities.
+- Added additional properties to `sentinelone_agent`:
+
+  - `function: 'anti-malware'`
 
 ## 0.4.0 2020-10-29
 
