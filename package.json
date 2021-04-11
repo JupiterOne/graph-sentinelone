@@ -1,6 +1,6 @@
 {
   "name": "@jupiterone/graph-sentinelone",
-  "version": "0.4.0",
+  "version": "0.4.2",
   "description": "A JupiterOne managed integration for https://www.sentinelone.com/",
   "license": "MPL-2.0",
   "main": "dist/index.js",
@@ -24,13 +24,13 @@
     "prepack": "yarn build"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^4.0.0"
+    "@jupiterone/integration-sdk-core": "^5.11.2"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^4.0.0",
-    "@jupiterone/integration-sdk-dev-tools": "^4.0.0",
-    "@jupiterone/integration-sdk-testing": "^4.0.0",
-    "@types/node-fetch": "^2.5.7"
+    "@jupiterone/integration-sdk-core": "^5.11.2",
+    "@jupiterone/integration-sdk-dev-tools": "^5.11.2",
+    "@jupiterone/integration-sdk-testing": "^5.11.2",
+    "@types/node-fetch": "^2.5.10"
   },
   "dependencies": {
     "node-fetch": "^2.6.1"
