@@ -1,0 +1,16 @@
+---
+  sourceId: managed:sentinelone
+  integrationDefinitionId: "${integration_definition_id}"
+  questions:
+  - id: integration-question-sentinelone-agent-not-installed
+    title: Which end-user devices do not have SentinelOne agent installed?
+    description:
+      Find all user endpoint devices not protected by SentinelOne agent.
+    queries:
+    - query: |
+        Find (user_endpoint|workstation|laptop|desktop|computer) 
+          that !PROTECTS sentinelone_agent
+    tags:
+    - device
+    - endpoint
+    
