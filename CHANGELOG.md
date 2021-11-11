@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 1.0.1 2021-11-11
+
 - Move questions into open source repository
 
 ## 1.0.0 2021-11-08
