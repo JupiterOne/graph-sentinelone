@@ -1,4 +1,4 @@
-# SentinelOne 
+# SentinelOne
 
 ## SentinelOne + JupiterOne Integration Benefits
 
