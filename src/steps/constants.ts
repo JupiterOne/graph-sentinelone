@@ -1,19 +1,19 @@
-import { RelationshipClass } from "@jupiterone/integration-sdk-core";
+import { RelationshipClass } from '@jupiterone/integration-sdk-core';
 
-export const ACCOUNT_ENTITY_TYPE = "sentinelone_account";
-export const ACCOUNT_ENTITY_CLASS = "Account";
+export const ACCOUNT_ENTITY_TYPE = 'sentinelone_account';
+export const ACCOUNT_ENTITY_CLASS = 'Account';
 
-export const ACCOUNT_GROUP_RELATIONSHIP_TYPE = "sentinelone_account_has_group";
-export const ACCOUNT_GROUP_RELATIONSHIP_CLASS = "HAS";
+export const ACCOUNT_GROUP_RELATIONSHIP_TYPE = 'sentinelone_account_has_group';
+export const ACCOUNT_GROUP_RELATIONSHIP_CLASS = 'HAS';
 
-export const GROUP_ENTITY_TYPE = "sentinelone_group";
-export const GROUP_ENTITY_CLASS = "Group";
+export const GROUP_ENTITY_TYPE = 'sentinelone_group';
+export const GROUP_ENTITY_CLASS = 'Group';
 
-export const GROUP_AGENT_RELATIONSHIP_TYPE = "sentinelone_group_has_agent";
-export const GROUP_AGENT_RELATIONSHIP_CLASS = "HAS";
+export const GROUP_AGENT_RELATIONSHIP_TYPE = 'sentinelone_group_has_agent';
+export const GROUP_AGENT_RELATIONSHIP_CLASS = 'HAS';
 
-export const AGENT_ENTITY_TYPE = "sentinelone_agent";
-export const AGENT_ENTITY_CLASS = "HostAgent";
+export const AGENT_ENTITY_TYPE = 'sentinelone_agent';
+export const AGENT_ENTITY_CLASS = 'HostAgent';
 
 export const Entities = {
   ACCOUNT: {
@@ -24,14 +24,14 @@ export const Entities = {
   GROUP: {
     resourceName: 'Group',
     _type: GROUP_ENTITY_TYPE,
-    _class: GROUP_ENTITY_CLASS
+    _class: GROUP_ENTITY_CLASS,
   },
   AGENT: {
     resourceName: 'Agent',
     _type: AGENT_ENTITY_TYPE,
-    _class: AGENT_ENTITY_CLASS
-  }
-}
+    _class: AGENT_ENTITY_CLASS,
+  },
+};
 
 export const Relationships = {
   ACCOUNT_GROUP: {
@@ -45,5 +45,5 @@ export const Relationships = {
     _class: RelationshipClass.HAS,
     sourceType: GROUP_ENTITY_TYPE,
     targetType: AGENT_ENTITY_TYPE,
-  }
-}
+  },
+};
