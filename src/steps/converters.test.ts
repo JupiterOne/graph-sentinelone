@@ -77,8 +77,11 @@ test('createAgentEntity', () => {
     mitigationModeSuspicious: 'protect',
     isDecommissioned: true,
   };
+
+  const { licenseKey, ...rawData } = agent;
+
   expect(createAgentEntity(agent)).toEqual({
-    _rawData: [{ name: 'default', rawData: agent }],
+    _rawData: [{ name: 'default', rawData: rawData }],
     _class: ['HostAgent'],
     _key: 'sentinelone_agent-id-225494730938493804',
     _type: 'sentinelone_agent',
@@ -113,7 +116,6 @@ test('createAgentEntity', () => {
     isUpToDate: true,
     lastActiveDate: 1519706966257,
     lastLoggedInUserName: 'janedoe3',
-    licenseKey: 'string',
     machineType: 'unknown',
     mitigationMode: 'protect',
     mitigationModeSuspicious: 'protect',
