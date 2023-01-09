@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 1.1.0 - 2023-01-09
+
+### Removed
+
+- removed the `licenseKey` property from `sentinelone_agents`
+
 ## 1.0.1 2021-11-11
 
 - Move questions into open source repository
