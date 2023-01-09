@@ -59,9 +59,10 @@ export function createGroupEntity(d: SentinelOneGroup): Entity {
 }
 
 export function createAgentEntity(d: SentinelOneAgent): Entity {
+  const { licenseKey, ...agent } = d;
   return createIntegrationEntity({
     entityData: {
-      source: d,
+      source: agent,
       assign: {
         _key: `${AGENT_ENTITY_TYPE}-id-${d.id}`,
         _type: AGENT_ENTITY_TYPE,
@@ -109,7 +110,6 @@ export function createAgentEntity(d: SentinelOneAgent): Entity {
         groupId: d.groupId,
         isActive: d.isActive,
         agentVersion: d.agentVersion,
-        licenseKey: d.licenseKey,
         networkStatus: d.networkStatus,
         lastLoggedInUserName: d.lastLoggedInUserName,
         osName: d.osName,
