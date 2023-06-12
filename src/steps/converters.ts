@@ -107,6 +107,7 @@ export function createAgentEntity(d: SentinelOneAgent): Entity {
         isPendingUninstall: d.isPendingUninstall,
         scanFinishedAt: parseTimePropertyValue(d.scanFinishedAt),
         lastActiveDate: parseTimePropertyValue(d.lastActiveDate),
+        lastSeenOn: parseTimePropertyValue(d.lastActiveDate),
         groupId: d.groupId,
         isActive: d.isActive,
         agentVersion: d.agentVersion,
