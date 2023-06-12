@@ -85,7 +85,7 @@ https://github.com/JupiterOne/sdk/blob/main/docs/integrations/development.md
 
 ### Entities
 
-The following entities are created/mapped:
+The following entities are created:
 
 | Resources | Entity `_type`        | Entity `_class` |
 | --------- | --------------------- | --------------- |
@@ -95,7 +95,7 @@ The following entities are created/mapped:
 
 ### Relationships
 
-The following relationships are created/mapped:
+The following relationships are created:
 
 | Source Entity `_type` | Relationship `_class` | Target Entity `_type` |
 | --------------------- | --------------------- | --------------------- |
