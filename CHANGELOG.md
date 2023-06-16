@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 1.1.1 - 2023-06-12
+
+### Added
+
+- added the `lastSeenOn` property to `sentinelone_agents`
+
 ## 1.1.0 - 2023-01-09
 
 ### Removed

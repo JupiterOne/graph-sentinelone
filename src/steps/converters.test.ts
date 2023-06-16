@@ -116,6 +116,7 @@ test('createAgentEntity', () => {
     isUpToDate: true,
     lastActiveDate: 1519706966257,
     lastLoggedInUserName: 'janedoe3',
+    lastSeenOn: 1519706966257,
     machineType: 'unknown',
     mitigationMode: 'protect',
     mitigationModeSuspicious: 'protect',
