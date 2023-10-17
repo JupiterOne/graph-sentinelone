@@ -1,0 +1,12 @@
+openapi: 3.0.1
+info:
+  title: '@jupiterone/graph-sentinelone'
+  description: A JupiterOne managed integration for https://www.sentinelone.com/
+  x-cortex-git:
+    github:
+      repository: JupiterOne/graph-sentinelone
+  x-cortex-owners:
+    - type: group
+      name: JupiterOne/integrations
+  x-cortex-service-groups: tier-4
+  x-cortex-tag: '@jupiterone/graph-sentinelone'
