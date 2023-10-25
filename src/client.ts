@@ -33,57 +33,65 @@ export interface SentinelOneGroup {
 }
 
 export interface SentinelOneAgent {
-  domain?: string;
-  appsVulnerabilityStatus?: string;
-  siteName?: string;
-  coreCount?: number;
-  totalMemory?: number;
-  inRemoteShellSession?: boolean;
-  osArch?: string;
-  allowRemoteShell?: boolean;
-  scanStatus?: string;
-  consoleMigrationStatus?: string;
-  updatedAt?: string;
-  osType?: string;
-  id: string;
-  createdAt?: string;
-  externalIp?: string;
-  computerName?: string;
-  modelName?: string;
-  uuid?: string;
-  encryptedApplications?: boolean;
-  adComputerDistinguishedName?: string;
-  osUsername?: string;
-  groupName?: string;
-  infected?: boolean;
-  policyUpdatedAt?: string;
-  cpuId?: string;
-  registeredAt?: string;
   activeThreats?: number;
-  groupUpdatedAt?: string;
-  machineType?: string;
-  groupIp?: string;
-  osStartTime?: string;
-  osRevision?: string;
-  scanAbortedAt?: string;
-  siteId?: string;
-  scanStartedAt?: string;
-  isPendingUninstall?: boolean;
-  scanFinishedAt?: string;
-  lastActiveDate?: string;
-  groupId: string;
-  isActive?: boolean;
+  adComputerDistinguishedName?: string;
   agentVersion?: string;
-  licenseKey?: string;
-  networkStatus?: string;
-  lastLoggedInUserName?: string;
-  osName?: string;
-  mitigationMode?: string;
+  allowRemoteShell?: boolean;
+  appsVulnerabilityStatus?: string;
+  computerName?: string;
+  consoleMigrationStatus?: string;
+  coreCount?: number;
   cpuCount?: number;
+  cpuId?: string;
+  createdAt?: string;
+  domain?: string;
+  encryptedApplications?: boolean;
+  externalIp?: string;
+  groupId: string;
+  groupIp?: string;
+  groupName?: string;
+  groupUpdatedAt?: string;
+  id: string;
+  infected?: boolean;
+  inRemoteShellSession?: boolean;
+  isActive?: boolean;
+  isDecommissioned?: boolean;
+  isPendingUninstall?: boolean;
   isUninstalled?: boolean;
   isUpToDate?: boolean;
+  lastActiveDate?: string;
+  lastLoggedInUserName?: string;
+  licenseKey?: string;
+  machineType?: string;
+  mitigationMode?: string;
   mitigationModeSuspicious?: string;
-  isDecommissioned?: boolean;
+  modelName?: string;
+  networkStatus?: string;
+  networkInterfaces?: {
+    id: string;
+    inet: string[];
+    inet6: string[];
+    name: string;
+    physical: string;
+  }[];
+  osArch?: string;
+  osName?: string;
+  osRevision?: string;
+  osStartTime?: string;
+  osType?: string;
+  osUsername?: string;
+  policyUpdatedAt?: string;
+  registeredAt?: string;
+  scanAbortedAt?: string;
+  scanFinishedAt?: string;
+  scanStartedAt?: string;
+  scanStatus?: string;
+  serialNumber?: string;
+  siteId?: string;
+  siteName?: string;
+  totalMemory?: number;
+  updatedAt?: string;
+  uuid?: string;
 }
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
@@ -105,7 +113,7 @@ export class SentinelOneAPIClient {
   }
 
   public async verifyAuthentication(): Promise<void> {
-    const endpoint = `${this.serverUrl}/web/api/v2.0/system/info`;
+    const endpoint = `${this.serverUrl}/web/api/v2.1/system/info`;
     try {
       await makeRequest<any>(endpoint, this.header);
     } catch (err) {
@@ -126,7 +134,7 @@ export class SentinelOneAPIClient {
   public async iterateAgents(
     iteratee: ResourceIteratee<SentinelOneAgent>,
   ): Promise<void> {
-    return this.iterateData(`${this.serverUrl}/web/api/v2.0/agents`, iteratee);
+    return this.iterateData(`${this.serverUrl}/web/api/v2.1/agents`, iteratee);
   }
 
   /**
@@ -137,7 +145,7 @@ export class SentinelOneAPIClient {
   public async iterateGroups(
     iteratee: ResourceIteratee<SentinelOneGroup>,
   ): Promise<void> {
-    return this.iterateData(`${this.serverUrl}/web/api/v2.0/groups`, iteratee);
+    return this.iterateData(`${this.serverUrl}/web/api/v2.1/groups`, iteratee);
   }
 
   private async iterateData<T>(
