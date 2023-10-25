@@ -8,6 +8,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 1.2.0 - 2023-10-25
+
+### Added
+
+- Added `macAddresses` and `serialNumber` property to `sentinelone_agent`
+- Use API v2.1
+
 ## 1.1.2 - 2023-06-16
 
 ### Added
