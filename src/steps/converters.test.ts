@@ -76,6 +76,7 @@ test('createAgentEntity', () => {
     isUpToDate: true,
     mitigationModeSuspicious: 'protect',
     isDecommissioned: true,
+    serialNumber: 'dummy',
   };
 
   const { licenseKey, ...rawData } = agent;
@@ -139,6 +140,8 @@ test('createAgentEntity', () => {
     totalMemory: 8192,
     updatedAt: 1519706966257,
     uuid: 'ff819e70af13be381993075eb0ce5f2f6de05be2',
+    macAddresses: ['00:25:96:FF:FE:12:34:56'],
+    serialNumber: 'dummy',
   });
 });
 

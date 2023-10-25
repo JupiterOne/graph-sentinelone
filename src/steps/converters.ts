@@ -120,6 +120,8 @@ export function createAgentEntity(d: SentinelOneAgent): Entity {
         isUpToDate: d.isUpToDate,
         mitigationModeSuspicious: d.mitigationModeSuspicious,
         isDecommissioned: d.isDecommissioned,
+        serialNumber: d.serialNumber,
+        macAddresses: d.networkInterfaces?.map((i) => i.physical),
       },
     },
   });
