@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 1.3.0 - 2023-10-26
+
 - `macAddresses` has been renamed to `macAddress`
 - `macAddress` no longer includes `00:00:00:00:00:00`
 - `serialNumber` has been renamed to `serial`
