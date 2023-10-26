@@ -26,6 +26,23 @@ test('createAgentEntity', () => {
         name: 'string',
         inet6: ['2001:db8:a0b:12f0::1', '2001:db8:a0b:12f0::2'],
       },
+      {
+        gatewayIp: null,
+        gatewayMacAddress: null,
+        id: '1646418461658622399',
+        inet: ['127.0.0.1'],
+        inet6: [
+          'fe80::29a4:c762:5e8a:d7ba',
+          'fe80::ce81:b1c:bd2c:69e',
+          'fe80::1d:2074:57da:d78a',
+          'fe80::36cb:eb58:d82c:d73f',
+          'fe80::4110:ece:cdcb:340f',
+          '::1',
+          'fe80::1',
+        ],
+        name: 'stf0',
+        physical: '00:00:00:00:00:00',
+      },
     ],
     externalIp: '31.155.5.7',
     computerName: 'JOHN-WIN-4125',
@@ -140,8 +157,8 @@ test('createAgentEntity', () => {
     totalMemory: 8192,
     updatedAt: 1519706966257,
     uuid: 'ff819e70af13be381993075eb0ce5f2f6de05be2',
-    macAddresses: ['00:25:96:FF:FE:12:34:56'],
-    serialNumber: 'dummy',
+    macAddress: ['00:25:96:FF:FE:12:34:56'],
+    serial: 'dummy',
   });
 });
 
