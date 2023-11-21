@@ -46,6 +46,7 @@ export async function fetchGroups({
 export async function fetchAgents({
   instance,
   jobState,
+  logger,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
 
@@ -60,7 +61,9 @@ export async function fetchAgents({
   }
 
   await apiClient.iterateAgents(async (agent) => {
-    const agentEntity = await jobState.addEntity(createAgentEntity(agent));
+    const agentEntity = await jobState.addEntity(
+      createAgentEntity(agent, logger),
+    );
 
     const groupEntity = await jobState.findEntity(
       groupIdToKeyMap[agent.groupId],

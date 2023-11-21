@@ -2,6 +2,7 @@ import {
   createIntegrationEntity,
   Entity,
   IntegrationInstance,
+  IntegrationLogger,
   parseTimePropertyValue,
 } from '@jupiterone/integration-sdk-core';
 
@@ -58,11 +59,27 @@ export function createGroupEntity(d: SentinelOneGroup): Entity {
   });
 }
 
-export function createAgentEntity(d: SentinelOneAgent): Entity {
+export function createAgentEntity(
+  d: SentinelOneAgent,
+  logger: IntegrationLogger,
+): Entity {
   const { licenseKey, ...agent } = d;
+  const { tags, ...rawData } = agent;
+  //temp - find the information about the tags an revert
+  //they seem to be an object that we don't pase and its throwing upload errors
+  //INT-9905
+  try {
+    logger.info(
+      { objectStructure: logObjectStructure(tags) },
+      'Object structure Log',
+    );
+  } catch (error) {
+    logger.info({ error }, 'There was an error while logging the structure');
+  }
+
   return createIntegrationEntity({
     entityData: {
-      source: agent,
+      source: rawData,
       assign: {
         _key: `${AGENT_ENTITY_TYPE}-id-${d.id}`,
         _type: AGENT_ENTITY_TYPE,
@@ -127,4 +144,25 @@ export function createAgentEntity(d: SentinelOneAgent): Entity {
       },
     },
   });
+}
+
+function logObjectStructure(obj: any): string {
+  let logString = '{';
+
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const value = obj[key];
+
+      if (typeof value === 'object' && value !== null) {
+        logString += ` ${key}: ${logObjectStructure(value)}`;
+      } else {
+        logString += ` ${key},`;
+      }
+    }
+  }
+
+  // Remove the trailing comma if there are properties in the object
+  logString = logString.endsWith(',') ? logString.slice(0, -1) : logString;
+
+  return logString + ' }';
 }
