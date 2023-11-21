@@ -92,7 +92,7 @@ export interface SentinelOneAgent {
   totalMemory?: number;
   updatedAt?: string;
   uuid?: string;
-  tags: any;
+  tags?: any;
 }
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
