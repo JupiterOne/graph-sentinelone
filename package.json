@@ -34,15 +34,32 @@
     "prepack": "yarn build"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^7.4.0"
+    "@jupiterone/integration-sdk-core": "^11.2.0"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^7.4.0",
-    "@jupiterone/integration-sdk-dev-tools": "^7.4.0",
-    "@jupiterone/integration-sdk-testing": "^7.4.0",
-    "@types/node-fetch": "^2.5.10"
+    "@jupiterone/integration-sdk-core": "^11.2.0",
+    "@jupiterone/integration-sdk-dev-tools": "^11.2.0",
+    "@jupiterone/integration-sdk-testing": "^11.2.0",
+    "@types/node-fetch": "^2.5.10",
+    "auto": "10.37.4"
   },
   "dependencies": {
     "node-fetch": "^2.6.1"
+  },
+  "auto": {
+    "plugins": [
+      [
+        "npm",
+        {
+          "setRcToken": false,
+          "publishFolder": "./dist"
+        }
+      ],
+      "released"
+    ],
+    "onlyPublishWithReleaseLabel": true,
+    "shipit": {
+      "prerelease": false
+    }
   }
 }
