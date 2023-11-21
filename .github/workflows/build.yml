@@ -8,26 +8,21 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
+      - name: Check out code repository source code
+        uses: actions/checkout@v3
+
       - id: setup-node
         name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 18.x
-
-      - name: Check out code repository source code
-        uses: actions/checkout@v2
+          cache: yarn
 
       - name: Install dependencies
-        run: yarn
+        run: yarn --frozen-lockfile
 
       - name: Run tests
-        env:
-          MANAGED_QUESTIONS_JUPITERONE_ACCOUNT_ID:
-            ${{ secrets.MANAGED_QUESTIONS_JUPITERONE_ACCOUNT_ID }}
-          MANAGED_QUESTIONS_JUPITERONE_API_KEY:
-            ${{ secrets.MANAGED_QUESTIONS_JUPITERONE_API_KEY }}
         run: yarn test:ci
 
       - name: Run build
@@ -41,15 +36,16 @@ jobs:
     if: github.ref == 'refs/heads/main'
     name: Checkout Code
     steps:
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 18.x
       - name: Check out repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           token: ${{ secrets.AUTO_GITHUB_PAT_TOKEN }}
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: yarn
       - name: Build and Release
         uses: jupiterone/action-npm-build-release@v1
         with:
