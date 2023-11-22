@@ -10,7 +10,7 @@
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "files": [
-    "dist",
+    "src",
     "jupiterone"
   ],
   "publishConfig": {
