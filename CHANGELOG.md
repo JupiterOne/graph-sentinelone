@@ -1,3 +1,16 @@
+# v1.3.3 (Mon Nov 27 2023)
+
+#### 🐛 Bug Fix
+
+- Removed prepack and libdom [#77](https://github.com/JupiterOne/graph-sentinelone/pull/77) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+- Added missing excludes [#76](https://github.com/JupiterOne/graph-sentinelone/pull/76) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v1.3.2 (Mon Nov 27 2023)
 
 #### 🐛 Bug Fix
