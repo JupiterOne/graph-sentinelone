@@ -53,7 +53,7 @@
         "npm",
         {
           "setRcToken": false,
-          "publishFolder": "."
+          "publishFolder": "./dist"
         }
       ],
       "released"
