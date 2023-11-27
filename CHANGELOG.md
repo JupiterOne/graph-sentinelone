@@ -1,3 +1,18 @@
+# v1.3.2 (Mon Nov 27 2023)
+
+#### 🐛 Bug Fix
+
+- Changed publish folder [#75](https://github.com/JupiterOne/graph-sentinelone/pull/75) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+- TYPO: Missed one dist to src [#74](https://github.com/JupiterOne/graph-sentinelone/pull/74) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+- Changed main and types [#73](https://github.com/JupiterOne/graph-sentinelone/pull/73) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+- Fix auto deploy [#72](https://github.com/JupiterOne/graph-sentinelone/pull/72) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v1.3.1 (Tue Nov 21 2023)
 
 #### 🐛 Bug Fix
