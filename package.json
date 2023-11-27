@@ -13,6 +13,9 @@
     "src",
     "jupiterone"
   ],
+  "engines": {
+    "node": ">=18.0.0 <19.x"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -32,7 +35,6 @@
     "test:ci": "yarn format:check && yarn lint && yarn type-check && yarn test",
     "build": "tsc -p tsconfig.dist.json --declaration && cp README.md dist/README.md && cp -r jupiterone/ dist/jupiterone/",
     "prepush": "yarn format:check && yarn lint && yarn type-check && jest --changedSince main",
-    "prepack": "yarn build",
     "postversion": "cp package.json ./dist/package.json"
   },
   "peerDependencies": {
@@ -42,6 +44,7 @@
     "@jupiterone/integration-sdk-core": "^11.2.0",
     "@jupiterone/integration-sdk-dev-tools": "^11.2.0",
     "@jupiterone/integration-sdk-testing": "^11.2.0",
+    "@types/node": "^20.10.0",
     "@types/node-fetch": "^2.5.10",
     "auto": "10.37.4"
   },
