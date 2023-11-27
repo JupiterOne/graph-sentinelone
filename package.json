@@ -31,7 +31,7 @@
     "test:env": "LOAD_ENV=1 yarn test",
     "test:ci": "yarn format:check && yarn lint && yarn type-check && yarn test",
     "build": "tsc -p tsconfig.dist.json --declaration && cp README.md dist/README.md && cp -r jupiterone/ dist/jupiterone/",
-    "prepush": "yarn lint && yarn type-check && jest --changedSince main",
+    "prepush": "yarn format:check && yarn lint && yarn type-check && jest --changedSince main",
     "prepack": "yarn build",
     "postversion": "cp package.json ./dist/package.json"
   },
