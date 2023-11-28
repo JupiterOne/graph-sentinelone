@@ -1,3 +1,15 @@
+# v1.3.4 (Tue Nov 28 2023)
+
+#### 🐛 Bug Fix
+
+- Cleanup [#78](https://github.com/JupiterOne/graph-sentinelone/pull/78) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v1.3.3 (Mon Nov 27 2023)
 
 #### 🐛 Bug Fix
