@@ -1,4 +1,5 @@
 import {
+  assignTags,
   createIntegrationEntity,
   Entity,
   IntegrationInstance,
@@ -65,21 +66,8 @@ export function createAgentEntity(
 ): Entity {
   const { licenseKey, ...agent } = d;
   const { tags, ...rawData } = agent;
-  //temp - find the information about the tags an revert
-  //they seem to be an object that we don't pase and its throwing upload errors
-  //INT-9905
-  if (logger) {
-    try {
-      logger.info(
-        { objectStructure: logObjectStructure(tags) },
-        'Object structure Log',
-      );
-    } catch (error) {
-      logger.info({ error }, 'There was an error while logging the structure');
-    }
-  }
 
-  return createIntegrationEntity({
+  const entity = createIntegrationEntity({
     entityData: {
       source: rawData,
       assign: {
@@ -146,25 +134,11 @@ export function createAgentEntity(
       },
     },
   });
-}
-
-function logObjectStructure(obj: any): string {
-  let logString = '{';
-
-  for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      const value = obj[key];
-
-      if (typeof value === 'object' && value !== null) {
-        logString += ` ${key}: ${logObjectStructure(value)}`;
-      } else {
-        logString += ` ${key},`;
-      }
-    }
+  try {
+    assignTags(entity, tags.sentinelone ?? []);
+  } catch (error) {
+    logger?.warn({ error }, 'Could not assign tags to agent entity');
   }
 
-  // Remove the trailing comma if there are properties in the object
-  logString = logString.endsWith(',') ? logString.slice(0, -1) : logString;
-
-  return logString + ' }';
+  return entity;
 }
