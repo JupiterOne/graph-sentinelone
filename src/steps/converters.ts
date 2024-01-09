@@ -67,6 +67,22 @@ export function createAgentEntity(
   const { licenseKey, ...agent } = d;
   const { tags, ...rawData } = agent;
 
+  // When selecting macAddresses, prefer networkInterfaces with a gatewayIp as they are more likely to have
+  // had their physical macAddress given to them by a central authority rather than being purely virtual.
+  //
+  // The gateway is often a central point through which network traffic flows. It's responsible for routing
+  // and forwarding packets between different networks. By associating MAC addresses with the gateway, you
+  // can have a more centralized and controlled point for monitoring and managing network traffic.
+  const internetNetworkInterface = d.networkInterfaces?.filter(
+    (i) => i.gatewayIp != undefined,
+  );
+  const networkInterfaces = internetNetworkInterface?.length
+    ? internetNetworkInterface
+    : d.networkInterfaces;
+  const macAddress = networkInterfaces
+    ?.filter((i) => i.physical !== '00:00:00:00:00:00')
+    .map((i) => i.physical);
+
   const entity = createIntegrationEntity({
     entityData: {
       source: rawData,
@@ -128,9 +144,7 @@ export function createAgentEntity(
         mitigationModeSuspicious: d.mitigationModeSuspicious,
         isDecommissioned: d.isDecommissioned,
         serial: d.serialNumber,
-        macAddress: d.networkInterfaces
-          ?.filter((i) => i.physical !== '00:00:00:00:00:00')
-          .map((i) => i.physical),
+        macAddress: macAddress,
       },
     },
   });

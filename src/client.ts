@@ -68,6 +68,8 @@ export interface SentinelOneAgent {
   modelName?: string;
   networkStatus?: string;
   networkInterfaces?: {
+    gatewayIp?: string;
+    gatewayMacAddress?: string;
     id: string;
     inet: string[];
     inet6: string[];
@@ -93,6 +95,7 @@ export interface SentinelOneAgent {
   updatedAt?: string;
   uuid?: string;
   tags?: any;
+  [s: string]: any;
 }
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
