@@ -1,3 +1,22 @@
+# v1.4.0 (Wed Jan 10 2024)
+
+#### 🚀 Enhancement
+
+- DEVICE-322  - Be more selective macAddresses [#79](https://github.com/JupiterOne/graph-sentinelone/pull/79) ([@mknoedel](https://github.com/mknoedel))
+
+#### ⚠️ Pushed to `main`
+
+- Apply remove-codeql with multi-gitter [ci skip] ([@electricgull](https://github.com/electricgull))
+- Fix x-cortex-service-groups where tier-4 was set incorrectly ([@jablonnc](https://github.com/jablonnc))
+
+#### Authors: 3
+
+- Cameron Griffin ([@electricgull](https://github.com/electricgull))
+- Michael Knoedel ([@mknoedel](https://github.com/mknoedel))
+- Noah Jablonski ([@jablonnc](https://github.com/jablonnc))
+
+---
+
 # v1.3.4 (Tue Nov 28 2023)
 
 #### 🐛 Bug Fix
