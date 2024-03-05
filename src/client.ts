@@ -95,6 +95,7 @@ export interface SentinelOneAgent {
   updatedAt?: string;
   uuid?: string;
   tags?: any;
+  missingPermissions?: string[];
   [s: string]: any;
 }
 
