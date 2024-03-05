@@ -41,9 +41,9 @@
     "@jupiterone/integration-sdk-core": "^11.2.0"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^11.2.0",
-    "@jupiterone/integration-sdk-dev-tools": "^11.2.0",
-    "@jupiterone/integration-sdk-testing": "^11.2.0",
+    "@jupiterone/integration-sdk-core": "^12.2.2",
+    "@jupiterone/integration-sdk-dev-tools": "^12.2.2",
+    "@jupiterone/integration-sdk-testing": "^12.2.2",
     "@types/node": "^20.10.0",
     "@types/node-fetch": "^2.5.10",
     "auto": "10.37.4"
