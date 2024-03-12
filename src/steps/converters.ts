@@ -145,6 +145,7 @@ export function createAgentEntity(
         isDecommissioned: d.isDecommissioned,
         serial: d.serialNumber,
         macAddress: macAddress,
+        missingPermissions: d.missingPermissions,
       },
     },
   });
