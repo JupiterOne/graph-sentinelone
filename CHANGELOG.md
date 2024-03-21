@@ -1,3 +1,19 @@
+# v1.5.0 (Thu Mar 21 2024)
+
+#### 🚀 Enhancement
+
+- Add missingPermissions to sentinel_one_agent [#83](https://github.com/JupiterOne/graph-sentinelone/pull/83) ([@i5o](https://github.com/i5o))
+
+#### 🐛 Bug Fix
+
+- Disable questions workflow since it's not working due to IAM changes [#84](https://github.com/JupiterOne/graph-sentinelone/pull/84) ([@i5o](https://github.com/i5o))
+
+#### Authors: 1
+
+- Ignacio Rodríguez ([@i5o](https://github.com/i5o))
+
+---
+
 # v1.4.0 (Wed Jan 10 2024)
 
 #### 🚀 Enhancement
