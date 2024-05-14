@@ -67,22 +67,6 @@ export function createAgentEntity(
   const { licenseKey, ...agent } = d;
   const { tags, ...rawData } = agent;
 
-  // When selecting macAddresses, prefer networkInterfaces with a gatewayIp as they are more likely to have
-  // had their physical macAddress given to them by a central authority rather than being purely virtual.
-  //
-  // The gateway is often a central point through which network traffic flows. It's responsible for routing
-  // and forwarding packets between different networks. By associating MAC addresses with the gateway, you
-  // can have a more centralized and controlled point for monitoring and managing network traffic.
-  const internetNetworkInterface = d.networkInterfaces?.filter(
-    (i) => i.gatewayIp != undefined,
-  );
-  const networkInterfaces = internetNetworkInterface?.length
-    ? internetNetworkInterface
-    : d.networkInterfaces;
-  const macAddress = networkInterfaces
-    ?.filter((i) => i.physical !== '00:00:00:00:00:00')
-    .map((i) => i.physical);
-
   const entity = createIntegrationEntity({
     entityData: {
       source: rawData,
@@ -144,7 +128,7 @@ export function createAgentEntity(
         mitigationModeSuspicious: d.mitigationModeSuspicious,
         isDecommissioned: d.isDecommissioned,
         serial: d.serialNumber,
-        macAddress: macAddress,
+        macAddress: getMacAddresses(d.networkInterfaces),
         missingPermissions: d.missingPermissions,
       },
     },
@@ -156,4 +140,58 @@ export function createAgentEntity(
   }
 
   return entity;
+}
+
+/**
+ * Extracts MAC addresses associated with public IP addresses from Tenable asset data.
+ * It filters out MAC addresses associated with private and special-use IP addresses,
+ * including APIPA and local-link IPv6 addresses, to focus only on those that are most likely to be unique and publicly routable.
+ *
+ * This function checks both IPv4 and IPv6 addresses:
+ * - For IPv4, it excludes addresses within private ranges like 10.x.x.x, 172.16.x.x to 172.31.x.x, 192.168.x.x, and APIPA range 169.254.x.x.
+ * - For IPv6, it excludes Unique Local Addresses (ULA) starting with fc00:: or fd00:: and link-local addresses starting with fe80::.
+ * MAC addresses from the top-level of the asset data are included, assuming they are associated with public IPs unless specified otherwise.
+ */
+export function getMacAddresses(
+  networkInterfaces: SentinelOneAgent['networkInterfaces'],
+): string[] {
+  const isPublicIp = (ip: string): boolean => {
+    const privateIp10Regex = /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/; // Matches 10.x.x.x
+    const privateIp172Regex = /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/; // Matches 172.16.x.x to 172.31.x.x
+    const privateIp192Regex = /^192\.168\.\d{1,3}\.\d{1,3}$/; // Matches 192.168.x.x
+    const apipaRegex = /^169\.254\.\d{1,3}\.\d{1,3}$/; // Matches 169.254.x.x (APIPA)
+    const privateIpv6Regex = /^(fc00::|fd00::|fe80::)/; // Matches IPv6 private
+    const localhostIpv4Regex = /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/; // Matches 127.x.x.x
+    const localhostIpv6Regex = /^::1$/; // Matches ::1 (IPv6 localhost)
+
+    return !(
+      privateIp10Regex.test(ip) ||
+      privateIp172Regex.test(ip) ||
+      privateIp192Regex.test(ip) ||
+      apipaRegex.test(ip) ||
+      privateIpv6Regex.test(ip) ||
+      localhostIpv4Regex.test(ip) ||
+      localhostIpv6Regex.test(ip)
+    );
+  };
+
+  const publicMacAddresses = new Set<string>();
+
+  // Extract macAddresses from network interfaces that are either associated with at least one public IP.
+  networkInterfaces?.forEach((ni) => {
+    const hasPublicIp =
+      (ni.inet?.length && ni.inet.some(isPublicIp)) ||
+      (ni.inet6?.length && ni.inet6.some(isPublicIp));
+    if (hasPublicIp) {
+      publicMacAddresses.add(ni.physical);
+    }
+
+    // When selecting macAddresses, prefer networkInterfaces with a gatewayIp as they are more likely to have
+    // had their physical macAddress given to them by a central authority rather than being purely virtual.
+    if (ni.gatewayIp && ni.gatewayMacAddress) {
+      publicMacAddresses.add(ni.gatewayMacAddress);
+    }
+  });
+
+  return [...publicMacAddresses].filter((m) => m !== '00:00:00:00:00:00');
 }
