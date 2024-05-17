@@ -182,16 +182,16 @@ export function getMacAddresses(
     const hasPublicIp =
       (ni.inet?.length && ni.inet.some(isPublicIp)) ||
       (ni.inet6?.length && ni.inet6.some(isPublicIp));
-    if (hasPublicIp) {
+    if (hasPublicIp && ni.physical !== "00:00:00:00:00:00") {
       publicMacAddresses.add(ni.physical);
     }
 
     // When selecting macAddresses, prefer networkInterfaces with a gatewayIp as they are more likely to have
     // had their physical macAddress given to them by a central authority rather than being purely virtual.
-    if (ni.gatewayIp && ni.gatewayMacAddress) {
+    if (ni.gatewayIp && ni.gatewayMacAddress && ni.gatewayMacAddress !== "00:00:00:00:00:00") {
       publicMacAddresses.add(ni.gatewayMacAddress);
     }
   });
 
-  return [...publicMacAddresses].filter((m) => m !== '00:00:00:00:00:00');
+  return [...publicMacAddresses]
 }
