@@ -155,25 +155,19 @@ export function createAgentEntity(
 export function getMacAddresses(
   networkInterfaces: SentinelOneAgent['networkInterfaces'],
 ): string[] {
-  const isPublicIp = (ip: string): boolean => {
-    const privateIp10Regex = /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/; // Matches 10.x.x.x
-    const privateIp172Regex = /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/; // Matches 172.16.x.x to 172.31.x.x
-    const privateIp192Regex = /^192\.168\.\d{1,3}\.\d{1,3}$/; // Matches 192.168.x.x
-    const apipaRegex = /^169\.254\.\d{1,3}\.\d{1,3}$/; // Matches 169.254.x.x (APIPA)
-    const privateIpv6Regex = /^(fc00::|fd00::|fe80::)/; // Matches IPv6 private
-    const localhostIpv4Regex = /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/; // Matches 127.x.x.x
-    const localhostIpv6Regex = /^::1$/; // Matches ::1 (IPv6 localhost)
+const isPublicIp = (ip: string): boolean => {
+  const privateIpPatterns = [
+    /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,         // Matches 10.x.x.x
+    /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/, // Matches 172.16.x.x to 172.31.x.x
+    /^192\.168\.\d{1,3}\.\d{1,3}$/,            // Matches 192.168.x.x
+    /^169\.254\.\d{1,3}\.\d{1,3}$/,            // Matches 169.254.x.x (APIPA)
+    /^(fc00::|fd00::|fe80::)/,                 // Matches IPv6 private
+    /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,        // Matches 127.x.x.x
+    /^::1$/                                    // Matches ::1 (IPv6 localhost)
+  ];
 
-    return !(
-      privateIp10Regex.test(ip) ||
-      privateIp172Regex.test(ip) ||
-      privateIp192Regex.test(ip) ||
-      apipaRegex.test(ip) ||
-      privateIpv6Regex.test(ip) ||
-      localhostIpv4Regex.test(ip) ||
-      localhostIpv6Regex.test(ip)
-    );
-  };
+  return !privateIpPatterns.some(pattern => pattern.test(ip));
+};
 
   const publicMacAddresses = new Set<string>();
 
