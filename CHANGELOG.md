@@ -1,3 +1,15 @@
+# v1.6.0 (Fri May 17 2024)
+
+#### 🚀 Enhancement
+
+- APP-15366 - Parse network interfaces to select only unique macAddresses [#85](https://github.com/JupiterOne/graph-sentinelone/pull/85) ([@mknoedel](https://github.com/mknoedel))
+
+#### Authors: 1
+
+- Michael Knoedel ([@mknoedel](https://github.com/mknoedel))
+
+---
+
 # v1.5.0 (Thu Mar 21 2024)
 
 #### 🚀 Enhancement
