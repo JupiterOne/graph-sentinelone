@@ -1,5 +1,9 @@
 import { SentinelOneAgent, SentinelOneGroup } from '../client';
-import { createAgentEntity, createGroupEntity } from './converters';
+import {
+  createAgentEntity,
+  createGroupEntity,
+  getMacAddresses,
+} from './converters';
 
 test('createAgentEntity', () => {
   const agent: SentinelOneAgent = {
@@ -191,7 +195,7 @@ test('createAgentEntity with a gatewayIp networkInterface', () => {
       },
       {
         gatewayIp: 'something',
-        gatewayMacAddress: undefined,
+        gatewayMacAddress: '00:25:96:FF:FE:12:34:57',
         id: '1646418461658622399',
         inet: ['127.0.0.1'],
         inet6: [],
@@ -312,7 +316,7 @@ test('createAgentEntity with a gatewayIp networkInterface', () => {
     totalMemory: 8192,
     updatedAt: 1519706966257,
     uuid: 'ff819e70af13be381993075eb0ce5f2f6de05be2',
-    macAddress: ['11:25:96:FF:FE:12:34:56'],
+    macAddress: ['00:25:96:FF:FE:12:34:56', '00:25:96:FF:FE:12:34:57'],
     serial: 'dummy',
   });
 });
@@ -355,5 +359,84 @@ test('createGroupEntity', () => {
     totalAgents: 0,
     type: 'static',
     updatedAt: 1519706966257,
+  });
+});
+
+describe('getMacAddresses', () => {
+  it('should return an empty array if there are no network interfaces', () => {
+    const result = getMacAddresses([]);
+    expect(result).toEqual([]);
+  });
+
+  it('should return only public MAC addresses', () => {
+    const networkInterfaces: SentinelOneAgent['networkInterfaces'] = [
+      {
+        physical: '00:00:00:00:00:01',
+        inet: ['192.168.0.1'],
+      },
+      {
+        physical: '00:00:00:00:00:02',
+        inet: ['8.8.8.8'],
+      },
+    ] as SentinelOneAgent['networkInterfaces'];
+    const result = getMacAddresses(networkInterfaces);
+    expect(result).toEqual(['00:00:00:00:00:02']);
+  });
+
+  it('should filter out the default MAC address 00:00:00:00:00:00', () => {
+    const networkInterfaces: SentinelOneAgent['networkInterfaces'] = [
+      {
+        physical: '00:00:00:00:00:00',
+        inet: ['8.8.8.8'],
+      },
+    ] as SentinelOneAgent['networkInterfaces'];
+    const result = getMacAddresses(networkInterfaces);
+    expect(result).toEqual([]);
+  });
+
+  it('should include MAC addresses associated with public IPv6 addresses', () => {
+    const networkInterfaces: SentinelOneAgent['networkInterfaces'] = [
+      {
+        physical: '00:00:00:00:00:03',
+        inet6: ['2001:0db8:85a3:0000:0000:8a2e:0370:7334'],
+      },
+    ] as SentinelOneAgent['networkInterfaces'];
+    const result = getMacAddresses(networkInterfaces);
+    expect(result).toEqual(['00:00:00:00:00:03']);
+  });
+
+  it('should include MAC addresses with gateway IPs and gateway MAC addresses', () => {
+    const networkInterfaces: SentinelOneAgent['networkInterfaces'] = [
+      {
+        physical: '00:00:00:00:00:04',
+        inet: ['8.8.8.8'],
+        gatewayIp: '192.168.1.1',
+        gatewayMacAddress: '00:00:00:00:00:05',
+      },
+    ] as SentinelOneAgent['networkInterfaces'];
+    const result = getMacAddresses(networkInterfaces);
+    expect(result).toEqual(['00:00:00:00:00:04', '00:00:00:00:00:05']);
+  });
+
+  it('should not include MAC addresses associated with private IPv4 addresses', () => {
+    const networkInterfaces: SentinelOneAgent['networkInterfaces'] = [
+      {
+        physical: '00:00:00:00:00:06',
+        inet: ['10.0.0.1'],
+      },
+    ] as SentinelOneAgent['networkInterfaces'];
+    const result = getMacAddresses(networkInterfaces);
+    expect(result).toEqual([]);
+  });
+
+  it('should not include MAC addresses associated with private IPv6 addresses', () => {
+    const networkInterfaces: SentinelOneAgent['networkInterfaces'] = [
+      {
+        physical: '00:00:00:00:00:07',
+        inet6: ['fe80::1'],
+      },
+    ] as SentinelOneAgent['networkInterfaces'];
+    const result = getMacAddresses(networkInterfaces);
+    expect(result).toEqual([]);
   });
 });
