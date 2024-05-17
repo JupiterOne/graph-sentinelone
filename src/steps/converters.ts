@@ -155,19 +155,19 @@ export function createAgentEntity(
 export function getMacAddresses(
   networkInterfaces: SentinelOneAgent['networkInterfaces'],
 ): string[] {
-const isPublicIp = (ip: string): boolean => {
-  const privateIpPatterns = [
-    /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,         // Matches 10.x.x.x
-    /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/, // Matches 172.16.x.x to 172.31.x.x
-    /^192\.168\.\d{1,3}\.\d{1,3}$/,            // Matches 192.168.x.x
-    /^169\.254\.\d{1,3}\.\d{1,3}$/,            // Matches 169.254.x.x (APIPA)
-    /^(fc00::|fd00::|fe80::)/,                 // Matches IPv6 private
-    /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,        // Matches 127.x.x.x
-    /^::1$/                                    // Matches ::1 (IPv6 localhost)
-  ];
+  const isPublicIp = (ip: string): boolean => {
+    const privateIpPatterns = [
+      /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/, // Matches 10.x.x.x
+      /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/, // Matches 172.16.x.x to 172.31.x.x
+      /^192\.168\.\d{1,3}\.\d{1,3}$/, // Matches 192.168.x.x
+      /^169\.254\.\d{1,3}\.\d{1,3}$/, // Matches 169.254.x.x (APIPA)
+      /^(fc00::|fd00::|fe80::)/, // Matches IPv6 private
+      /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/, // Matches 127.x.x.x
+      /^::1$/, // Matches ::1 (IPv6 localhost)
+    ];
 
-  return !privateIpPatterns.some(pattern => pattern.test(ip));
-};
+    return !privateIpPatterns.some((pattern) => pattern.test(ip));
+  };
 
   const publicMacAddresses = new Set<string>();
 
@@ -176,16 +176,20 @@ const isPublicIp = (ip: string): boolean => {
     const hasPublicIp =
       (ni.inet?.length && ni.inet.some(isPublicIp)) ||
       (ni.inet6?.length && ni.inet6.some(isPublicIp));
-    if (hasPublicIp && ni.physical !== "00:00:00:00:00:00") {
+    if (hasPublicIp && ni.physical !== '00:00:00:00:00:00') {
       publicMacAddresses.add(ni.physical);
     }
 
     // When selecting macAddresses, prefer networkInterfaces with a gatewayIp as they are more likely to have
     // had their physical macAddress given to them by a central authority rather than being purely virtual.
-    if (ni.gatewayIp && ni.gatewayMacAddress && ni.gatewayMacAddress !== "00:00:00:00:00:00") {
+    if (
+      ni.gatewayIp &&
+      ni.gatewayMacAddress &&
+      ni.gatewayMacAddress !== '00:00:00:00:00:00'
+    ) {
       publicMacAddresses.add(ni.gatewayMacAddress);
     }
   });
 
-  return [...publicMacAddresses]
+  return [...publicMacAddresses];
 }
