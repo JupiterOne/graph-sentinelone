@@ -156,16 +156,6 @@ export function getMacAddresses(
   networkInterfaces: SentinelOneAgent['networkInterfaces'],
 ): string[] {
   const isPublicIp = (ip: string): boolean => {
-    const privateIpPatterns = [
-      /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/, // Matches 10.x.x.x
-      /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/, // Matches 172.16.x.x to 172.31.x.x
-      /^192\.168\.\d{1,3}\.\d{1,3}$/, // Matches 192.168.x.x
-      /^169\.254\.\d{1,3}\.\d{1,3}$/, // Matches 169.254.x.x (APIPA)
-      /^(fc00::|fd00::|fe80::)/, // Matches IPv6 private
-      /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/, // Matches 127.x.x.x
-      /^::1$/, // Matches ::1 (IPv6 localhost)
-    ];
-
     return !privateIpPatterns.some((pattern) => pattern.test(ip));
   };
 
@@ -193,3 +183,13 @@ export function getMacAddresses(
 
   return [...publicMacAddresses];
 }
+
+const privateIpPatterns = [
+  /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/, // Matches 10.x.x.x
+  /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/, // Matches 172.16.x.x to 172.31.x.x
+  /^192\.168\.\d{1,3}\.\d{1,3}$/, // Matches 192.168.x.x
+  /^169\.254\.\d{1,3}\.\d{1,3}$/, // Matches 169.254.x.x (APIPA)
+  /^(fc00::|fd00::|fe80::)/, // Matches IPv6 private
+  /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/, // Matches 127.x.x.x
+  /^::1$/, // Matches ::1 (IPv6 localhost)
+];
