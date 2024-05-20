@@ -439,4 +439,75 @@ describe('getMacAddresses', () => {
     const result = getMacAddresses(networkInterfaces);
     expect(result).toEqual([]);
   });
+
+  //Tests for IPv6 Address Ranges
+
+  it('should not include MAC addresses associated with IPv6 ULA addresses', () => {
+    const networkInterfaces: SentinelOneAgent['networkInterfaces'] = [
+      {
+        physical: '00:00:00:00:00:08',
+        inet6: ['fc12:3456::1'],
+      },
+      {
+        physical: '00:00:00:00:00:09',
+        inet6: ['fd34:5678::1'],
+      },
+      {
+        physical: '00:00:00:00:00:10',
+        inet6: ['2001:0db8::1'], // Should not match
+      },
+    ] as SentinelOneAgent['networkInterfaces'];
+    const result = getMacAddresses(networkInterfaces);
+    expect(result).toEqual(['00:00:00:00:00:10']);
+  });
+
+  it('should not include MAC addresses associated with IPv6 Link-Local addresses', () => {
+    const networkInterfaces: SentinelOneAgent['networkInterfaces'] = [
+      {
+        physical: '00:00:00:00:00:11',
+        inet6: ['fe80::1'],
+      },
+      {
+        physical: '00:00:00:00:00:12',
+        inet6: ['fe91::1'],
+      },
+      {
+        physical: '00:00:00:00:00:13',
+        inet6: ['fea2::1'],
+      },
+      {
+        physical: '00:00:00:00:00:14',
+        inet6: ['feb3::1'],
+      },
+      {
+        physical: '00:00:00:00:00:15',
+        inet6: ['2001:0db8::1'], // Should not match
+      },
+    ] as SentinelOneAgent['networkInterfaces'];
+    const result = getMacAddresses(networkInterfaces);
+    expect(result).toEqual(['00:00:00:00:00:15']);
+  });
+
+  it('should not include MAC addresses associated with simplified IPv6 addresses but it should match the correct IPv6 addresses', () => {
+    const networkInterfaces: SentinelOneAgent['networkInterfaces'] = [
+      {
+        physical: '00:00:00:00:00:16',
+        inet6: ['fc00::1'],
+      },
+      {
+        physical: '00:00:00:00:00:17',
+        inet6: ['fd00::1'],
+      },
+      {
+        physical: '00:00:00:00:00:18',
+        inet6: ['fe80::1'],
+      },
+      {
+        physical: '00:00:00:00:00:19',
+        inet6: ['2001:0db8::1'], // Should not match
+      },
+    ] as SentinelOneAgent['networkInterfaces'];
+    const result = getMacAddresses(networkInterfaces);
+    expect(result).toEqual(['00:00:00:00:00:19']);
+  });
 });

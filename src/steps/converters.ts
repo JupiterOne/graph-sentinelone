@@ -189,7 +189,9 @@ const privateIpPatterns = [
   /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/, // Matches 172.16.x.x to 172.31.x.x
   /^192\.168\.\d{1,3}\.\d{1,3}$/, // Matches 192.168.x.x
   /^169\.254\.\d{1,3}\.\d{1,3}$/, // Matches 169.254.x.x (APIPA)
-  /^(fc00::|fd00::|fe80::)/, // Matches IPv6 private
+  /^(fc[0-9a-f]{2}:|fd[0-9a-f]{2}:)/, // Matches IPv6 ULA
+  /^(fe8[0-9a-f]:|fe9[0-9a-f]:|fea[0-9a-f]:|feb[0-9a-f]:)/, // Matches IPv6 Link-Local
+  /^(fc00::|fd00::|fe80::)/, // Matches IPv6 Simplified
   /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/, // Matches 127.x.x.x
   /^::1$/, // Matches ::1 (IPv6 localhost)
 ];
