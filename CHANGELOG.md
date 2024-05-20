@@ -1,3 +1,15 @@
+# v1.6.1 (Mon May 20 2024)
+
+#### 🐛 Bug Fix
+
+- APP-15366 - Handle more IPv6 ranges [#86](https://github.com/JupiterOne/graph-sentinelone/pull/86) ([@mknoedel](https://github.com/mknoedel))
+
+#### Authors: 1
+
+- Michael Knoedel ([@mknoedel](https://github.com/mknoedel))
+
+---
+
 # v1.6.0 (Fri May 17 2024)
 
 #### 🚀 Enhancement
