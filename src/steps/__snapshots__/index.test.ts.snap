@@ -13,6 +13,7 @@ exports[`should collect data 1`] = `
       "createdOn": undefined,
       "displayName": "Local Integration",
       "name": "Local Integration",
+      "vendor": "SentinelOne",
     },
   ],
   "collectedRelationships": [],
