@@ -6,7 +6,6 @@ import {
   IntegrationLogger,
   parseTimePropertyValue,
 } from '@jupiterone/integration-sdk-core';
-import { typeboxClassSchemaMap } from '@jupiterone/data-model';
 
 import { SentinelOneAgent, SentinelOneGroup } from '../client';
 import {
