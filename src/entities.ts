@@ -49,7 +49,6 @@ export const [AgentEntityMetadata, createAgentAssignEntity] =
     _type: createEntityType('agent'),
     description: 'SentinelOne Agent',
     schema: SchemaType.Object({
-      function: SchemaType.Array(SchemaType.Literal('anti-malware')),
       domain: SchemaType.Optional(SchemaType.String()),
       appsVulnerabilityStatus: SchemaType.Optional(SchemaType.String()),
       siteName: SchemaType.Optional(SchemaType.String()),

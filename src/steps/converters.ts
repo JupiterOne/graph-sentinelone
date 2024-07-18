@@ -74,9 +74,8 @@ export function createAgentEntity(
       source: rawData,
       assign: createAgentAssignEntity({
         _key: `${AgentEntityMetadata._type}-id-${d.id}`,
-        function: [
-          'anti-malware',
-        ] as (typeof typeboxClassSchemaMap)['HostAgent']['function'],
+        // TODO: Change to the correct type (['anti-malware']) once a breaking change strategy is in place. Documented here: https://jupiterone.atlassian.net/wiki/spaces/~6074562e9361560068b2d3fa/pages/800718879/To+update+in+phase+2
+        function: 'anti-malware' as any,
         displayName: d.computerName,
         name: d.computerName || d.id,
         domain: d.domain,
