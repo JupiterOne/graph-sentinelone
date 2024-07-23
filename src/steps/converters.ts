@@ -9,25 +9,24 @@ import {
 
 import { SentinelOneAgent, SentinelOneGroup } from '../client';
 import {
-  ACCOUNT_ENTITY_CLASS,
-  ACCOUNT_ENTITY_TYPE,
-  AGENT_ENTITY_CLASS,
-  AGENT_ENTITY_TYPE,
-  GROUP_ENTITY_CLASS,
-  GROUP_ENTITY_TYPE,
-} from './constants';
+  AccountEntityMetadata,
+  AgentEntityMetadata,
+  createAccountAssignEntity,
+  createAgentAssignEntity,
+  createGroupAssignEntity,
+  GroupEntityMetadata,
+} from '../entities';
 
 export function createAccountEntity(data: IntegrationInstance): Entity {
   return createIntegrationEntity({
     entityData: {
       source: {},
-      assign: {
-        _key: `${ACCOUNT_ENTITY_TYPE}-${data.id}`,
-        _type: ACCOUNT_ENTITY_TYPE,
-        _class: ACCOUNT_ENTITY_CLASS,
+      assign: createAccountAssignEntity({
+        _key: `${AccountEntityMetadata._type}-${data.id}`,
         name: data.name,
         displayName: data.name,
-      },
+        vendor: 'SentinelOne',
+      }),
     },
   });
 }
@@ -36,14 +35,12 @@ export function createGroupEntity(d: SentinelOneGroup): Entity {
   return createIntegrationEntity({
     entityData: {
       source: d,
-      assign: {
-        _key: `${GROUP_ENTITY_TYPE}-id-${d.id}`,
-        _type: GROUP_ENTITY_TYPE,
-        _class: GROUP_ENTITY_CLASS,
+      assign: createGroupAssignEntity({
+        _key: `${GroupEntityMetadata._type}-id-${d.id}`,
         id: d.id,
         displayName: `${d.name} ${d.type}`,
         inherits: d.inherits,
-        name: d.name,
+        name: d.name || d.id,
         creator: d.creator,
         filterName: d.filterName,
         totalAgents: d.totalAgents,
@@ -52,10 +49,14 @@ export function createGroupEntity(d: SentinelOneGroup): Entity {
         siteId: d.siteId,
         isDefault: d.isDefault,
         creatorId: d.creatorId,
+        // deprecated in favor of updatedOn
         updatedAt: parseTimePropertyValue(d.updatedAt),
+        updatedOn: parseTimePropertyValue(d.updatedAt),
         type: d.type,
+        // deprecated in favor of createdOn
         createdAt: parseTimePropertyValue(d.createdAt),
-      },
+        createdOn: parseTimePropertyValue(d.createdAt),
+      }),
     },
   });
 }
@@ -70,12 +71,12 @@ export function createAgentEntity(
   const entity = createIntegrationEntity({
     entityData: {
       source: rawData,
-      assign: {
-        _key: `${AGENT_ENTITY_TYPE}-id-${d.id}`,
-        _type: AGENT_ENTITY_TYPE,
-        _class: AGENT_ENTITY_CLASS,
-        function: 'anti-malware',
+      assign: createAgentAssignEntity({
+        _key: `${AgentEntityMetadata._type}-id-${d.id}`,
+        // TODO: Change to the correct type (['anti-malware']) once a breaking change strategy is in place. Documented here: https://jupiterone.atlassian.net/wiki/spaces/~6074562e9361560068b2d3fa/pages/800718879/To+update+in+phase+2
+        function: 'anti-malware' as any,
         displayName: d.computerName,
+        name: d.computerName || d.id,
         domain: d.domain,
         appsVulnerabilityStatus: d.appsVulnerabilityStatus,
         siteName: d.siteName,
@@ -86,10 +87,14 @@ export function createAgentEntity(
         allowRemoteShell: d.allowRemoteShell,
         scanStatus: d.scanStatus,
         consoleMigrationStatus: d.consoleMigrationStatus,
+        // deprecated in favor of updatedOn
         updatedAt: parseTimePropertyValue(d.updatedAt),
+        updatedOn: parseTimePropertyValue(d.updatedAt),
         osType: d.osType,
         id: d.id,
+        // deprecated in favor of createdOn
         createdAt: parseTimePropertyValue(d.createdAt),
+        createdOn: parseTimePropertyValue(d.createdAt),
         externalIp: d.externalIp,
         computerName: d.computerName,
         modelName: d.modelName,
@@ -99,22 +104,37 @@ export function createAgentEntity(
         osUsername: d.osUsername,
         groupName: d.groupName,
         infected: d.infected,
+        isInfected: d.infected,
+        // deprecated in favor of policyUpdatedOn
         policyUpdatedAt: parseTimePropertyValue(d.policyUpdatedAt),
+        policyUpdatedOn: parseTimePropertyValue(d.policyUpdatedAt),
         cpuId: d.cpuId,
+        // deprecated in favor of registeredOn
         registeredAt: parseTimePropertyValue(d.registeredAt),
+        registeredOn: parseTimePropertyValue(d.registeredAt),
+        // deprecated in favor of activeThreatsCount
         activeThreats: d.activeThreats,
+        activeThreatsCount: d.activeThreats,
+        // deprecated in favor of groupUpdatedOn
         groupUpdatedAt: parseTimePropertyValue(d.groupUpdatedAt),
+        groupUpdatedOn: parseTimePropertyValue(d.groupUpdatedAt),
         machineType: d.machineType,
         groupIp: d.groupIp,
         osStartTime: parseTimePropertyValue(d.osStartTime),
         osRevision: d.osRevision,
+        // deprecated in favor of scanAbortedOn
         scanAbortedAt: parseTimePropertyValue(d.scanAbortedAt),
+        scanAbortedOn: parseTimePropertyValue(d.scanAbortedAt),
         siteId: d.siteId,
+        // deprecated in favor of scanStartedOn
         scanStartedAt: parseTimePropertyValue(d.scanStartedAt),
+        scanStartedOn: parseTimePropertyValue(d.scanStartedAt),
         isPendingUninstall: d.isPendingUninstall,
+        // deprecated in favor of scanFinishedOn
         scanFinishedAt: parseTimePropertyValue(d.scanFinishedAt),
+        scanFinishedOn: parseTimePropertyValue(d.scanFinishedAt),
         lastActiveDate: parseTimePropertyValue(d.lastActiveDate),
-        lastSeenOn: parseTimePropertyValue(d.lastActiveDate),
+        lastSeenOn: parseTimePropertyValue(d.lastActiveDate) ?? null,
         groupId: d.groupId,
         isActive: d.isActive,
         agentVersion: d.agentVersion,
@@ -128,9 +148,11 @@ export function createAgentEntity(
         mitigationModeSuspicious: d.mitigationModeSuspicious,
         isDecommissioned: d.isDecommissioned,
         serial: d.serialNumber,
+        // deprecated in favor of macAddresses
         macAddress: getMacAddresses(d.networkInterfaces),
+        macAddresses: getMacAddresses(d.networkInterfaces),
         missingPermissions: d.missingPermissions,
-      },
+      }),
     },
   });
   try {
