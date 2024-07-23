@@ -44,7 +44,7 @@ functions called steps, each of which ingests a collection of resources and
 relationships. The goal is to limit each step to as few resource types as
 possible so that should the ingestion of one type of data fail, it does not
 necessarily prevent the ingestion of other, unrelated data. That should be
-enough information to allow you to get started coding!!
+enough information to allow you to get started coding!
 
 See the
 [SDK development documentation](https://github.com/JupiterOne/sdk/blob/main/docs/integrations/development.md)
