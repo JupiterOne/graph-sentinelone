@@ -1,3 +1,20 @@
+# v1.7.0 (Tue Jul 23 2024)
+
+#### 🚀 Enhancement
+
+- APP-15550 - Really bump version [#89](https://github.com/JupiterOne/graph-sentinelone/pull/89) ([@jzolo22](https://github.com/jzolo22))
+- APP-15550 - Bump version [#88](https://github.com/JupiterOne/graph-sentinelone/pull/88) ([@jzolo22](https://github.com/jzolo22))
+
+#### 🐛 Bug Fix
+
+- APP-15550 - Update to use createIntegrationHelper [#87](https://github.com/JupiterOne/graph-sentinelone/pull/87) ([@jzolo22](https://github.com/jzolo22))
+
+#### Authors: 1
+
+- Julia Zolotarev ([@jzolo22](https://github.com/jzolo22))
+
+---
+
 # v1.6.1 (Mon May 20 2024)
 
 #### 🐛 Bug Fix
